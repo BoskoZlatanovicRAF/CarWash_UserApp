@@ -15,14 +15,13 @@ fun ScreenManager() {
     ) {
         logIn(
             route = "login",
-            onUserClick = {
-                println("------------------------------User clicked on: $it")
-                if (it.equals("admin")) {
-//                    navController.navigate(route = "admin_home_screen")
+            onUserClick = { 
+                if (it.equals("registerScreen")) {
                     navController.navigate(route = "registerScreen")
-                } else {
-//                    navController.navigate(route = "user_home_screen")
-                    navController.navigate(route = "registerScreen")
+                } else if (it.equals("admin")){
+                    navController.navigate(route = "admin")
+                }else{
+                    navController.navigate(route = "user")
                 }
             }
         )
