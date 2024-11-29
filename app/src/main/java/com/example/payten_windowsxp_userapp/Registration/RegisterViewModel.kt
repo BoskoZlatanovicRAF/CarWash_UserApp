@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.payten_windowsxp_userapp.Users.RoleEnum
 import com.example.payten_windowsxp_userapp.Users.User
-import com.example.payten_windowsxp_userapp.Users.UserRepository
+import com.example.payten_windowsxp_userapp.Users.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,7 +72,9 @@ class RegisterViewModel @Inject constructor(
                                 phoneNumber = phoneNumber,
                                 birthdate = birthdate,
                                 password = password,
-                                role = RoleEnum.USER
+                                role = RoleEnum.USER,
+                                bonusPoints = 0,
+                                time = "00:00"
                             )
 
                             /*

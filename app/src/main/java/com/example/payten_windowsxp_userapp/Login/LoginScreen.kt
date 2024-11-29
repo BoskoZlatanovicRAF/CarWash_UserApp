@@ -81,7 +81,7 @@ fun LoginScreen(
             var email by remember { mutableStateOf("") }
 
             if (state.User != null && state.isAdmin) {
-                onUserClick("registerScreen") //-------------------------------
+                onUserClick("adminHomeScreen")
             } else if (state.User != null) {
                 onUserClick("registerScreen") //-------------------------------
             }
@@ -122,7 +122,7 @@ fun LoginScreen(
                         fontSize = 16.sp,
                         color = Color(0xFFED6825),
                         modifier = Modifier.clickable {
-                            onUserClick("register")
+                            onUserClick("registerScreen")
                         }
                     )
                 }

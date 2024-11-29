@@ -1,5 +1,6 @@
-package com.example.payten_windowsxp_userapp.Users
+package com.example.payten_windowsxp_userapp.Users.repository
 
+import com.example.payten_windowsxp_userapp.Users.User
 import com.example.payten_windowsxp_userapp.db.AppDatabase
 import javax.inject.Inject
 

@@ -4,14 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.payten_windowsxp_userapp.Users.RoleEnum
 import com.example.payten_windowsxp_userapp.Users.User
-import com.example.payten_windowsxp_userapp.Users.UserRepository
+import com.example.payten_windowsxp_userapp.Users.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.security.MessageDigest
 import javax.inject.Inject
 
 
@@ -32,21 +31,6 @@ class LoginScreenViewModel @Inject constructor(
         //addAdmin()
         observeEvents()
     }
-
-    /*
-    data class User (
-    @PrimaryKey(autoGenerate = true) val id: Long,
-    @ColumnInfo(name = "first_name")
-    val firstname: String,
-    @ColumnInfo(name = "last_name")
-    val lastName: String,
-    val email: String,
-    val phoneNumber: String,
-    val birthdate: String,
-    val password: String,
-    val role: RoleEnum,
-)
-     */
     private fun addAdmin() {
         viewModelScope.launch {
             val user = User(
@@ -58,6 +42,8 @@ class LoginScreenViewModel @Inject constructor(
                 birthdate = "01-01-2000",
                 password = "admin",
                 role = RoleEnum.ADMIN,
+                bonusPoints = 0,
+                time = "00:00"
             )
             userRepository.insertUser(user)
         }
