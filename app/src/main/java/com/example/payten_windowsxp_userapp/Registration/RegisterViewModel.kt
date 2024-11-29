@@ -57,6 +57,7 @@ class RegisterViewModel @Inject constructor(
                         val fullNameRegex = "^[A-Z][a-z]{3,} [A-Z][a-z]{3,}$".toRegex()
                         val emailRegex = "^[A-Za-z0-9_]{3,}@[A-Za-z0-9_]{3,}\\.[A-Za-z0-9_]{2,}$".toRegex()
                         if (fullName.isEmpty() || email.isEmpty() || phoneNumber.isEmpty() || birthdate.isEmpty()) {
+                            println("DATUM   "+ birthdate)
                             println("Empty fields")
                         } else if (fullName.isNotEmpty() && !fullName.matches(fullNameRegex)) {
                             println("Invalid full name")
