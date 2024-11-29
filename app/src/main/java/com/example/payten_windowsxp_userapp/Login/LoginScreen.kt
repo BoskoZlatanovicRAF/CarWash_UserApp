@@ -37,6 +37,7 @@ import androidx.navigation.compose.composable
 import com.example.payten_windowsxp_userapp.Registration.RegisterState
 import com.example.payten_windowsxp_userapp.Registration.registrationInput
 
+
 fun NavGraphBuilder.logIn(
     route: String,
     onUserClick: (String) -> Unit
