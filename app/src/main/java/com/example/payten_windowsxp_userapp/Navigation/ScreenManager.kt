@@ -28,6 +28,9 @@ fun ScreenManager() {
             onItemClick = {
                 navController.navigate(route = "login")
             },
+            onLoginClick = {
+                navController.navigate(route = "login")
+            }
         )
     }
 }

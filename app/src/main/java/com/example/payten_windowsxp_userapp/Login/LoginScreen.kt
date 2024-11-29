@@ -45,6 +45,7 @@ import com.example.payten_windowsxp_userapp.Registration.RegisterState
 import com.example.payten_windowsxp_userapp.Registration.registrationInput
 import okhttp3.internal.wait
 
+
 fun NavGraphBuilder.logIn(
     route: String,
     onUserClick: (String) -> Unit
