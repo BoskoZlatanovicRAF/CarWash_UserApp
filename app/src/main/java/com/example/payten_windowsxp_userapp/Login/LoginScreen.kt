@@ -81,10 +81,11 @@ fun LoginScreen(
             var email by remember { mutableStateOf("") }
 
             if (state.User != null && state.isAdmin) {
-                onUserClick("admin")
+                onUserClick("registerScreen") //-------------------------------
             } else if (state.User != null) {
-                onUserClick("user")
+                onUserClick("registerScreen") //-------------------------------
             }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()

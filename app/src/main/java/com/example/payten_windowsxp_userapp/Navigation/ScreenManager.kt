@@ -15,11 +15,13 @@ fun ScreenManager() {
     ) {
         logIn(
             route = "login",
-            onUserClick = {
+            onUserClick = { 
                 if (it.equals("registerScreen")) {
                     navController.navigate(route = "registerScreen")
                 } else if (it.equals("admin")){
                     navController.navigate(route = "admin")
+                }else{
+                    navController.navigate(route = "user")
                 }
             }
         )
