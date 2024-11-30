@@ -4,7 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.payten_windowsxp_userapp.Users.RoleEnum
 import com.example.payten_windowsxp_userapp.Users.User
+import com.example.payten_windowsxp_userapp.Users.repository.TransactionRepository
 import com.example.payten_windowsxp_userapp.Users.repository.UserRepository
+import com.example.payten_windowsxp_userapp.Users.user.db.Transaction
+import com.example.payten_windowsxp_userapp.auth.AuthData
+import com.example.payten_windowsxp_userapp.auth.AuthStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +20,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val transactionRepository: TransactionRepository,
+    private val authStore: AuthStore
 ) : ViewModel() {
     private val _state = MutableStateFlow(LoginScreenContract.LoginScreenUiState())
     val state = _state.asStateFlow()
@@ -28,9 +34,42 @@ class LoginScreenViewModel @Inject constructor(
     fun setEvent(event: LoginScreenContract.LoginScreenUiEvent) = viewModelScope.launch { events.emit(event) }
 
     init {
-//        addAdmin()
         observeEvents()
     }
+
+    private fun addTransactions() {
+        viewModelScope.launch {
+            val transactions = listOf(
+                Transaction(
+                    id = 0, // Auto-generisan ID
+                    userId = 2, // Povezivanje sa korisnikom sa ID 3
+                    description = "Car Wash Box 1",
+                    bonusPoints = 20,
+                    date = "30-11-2024"
+                ),
+                Transaction(
+                    id = 0, // Auto-generisan ID
+                    userId = 2, // Povezivanje sa korisnikom sa ID 3
+                    description = "Car Wash Box 2",
+                    bonusPoints = 50,
+                    date = "01-12-2024"
+                ),
+                Transaction(
+                    id = 0, // Auto-generisan ID
+                    userId = 2, // Povezivanje sa korisnikom sa ID 3
+                    description = "Car Wash Box 3",
+                    bonusPoints = 30,
+                    date = "02-12-2024"
+                )
+            )
+
+            // Umetanje transakcija u bazu podataka
+            transactions.forEach { transaction ->
+                transactionRepository.insertTransaction(transaction)
+            }
+        }
+    }
+
     private fun addAdmin() {
         viewModelScope.launch {
             val user = User(
@@ -68,6 +107,16 @@ class LoginScreenViewModel @Inject constructor(
                                     if(user.role == RoleEnum.ADMIN){
                                         setState { copy(isAdmin = true) }
                                     }
+                                    authStore.updateAuthData(
+                                        AuthData(
+                                            id = user.id,
+                                            firstname = user.firstname,
+                                            lastName = user.lastName,
+                                            email = user.email,
+                                            bonusPoints = user.bonusPoints,
+                                            time = user.time
+                                        )
+                                    )
                                 } else {
                                     println("Wrong password")
                                 }

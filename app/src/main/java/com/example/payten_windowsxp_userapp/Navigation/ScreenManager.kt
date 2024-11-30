@@ -9,6 +9,7 @@ import com.example.payten_windowsxp_userapp.Registration.registerScreen
 import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.EditLocalScreen.editLocalScreen
 import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.localScreen
 import com.example.payten_windowsxp_userapp.Users.Admin.adminHomeScreen
+import com.example.payten_windowsxp_userapp.Users.user.userHomeScreen
 
 @Composable
 fun ScreenManager() {
@@ -23,6 +24,7 @@ fun ScreenManager() {
                 when (it) {
                     "registerScreen" -> navController.navigate(route = "registerScreen")
                     "adminHomeScreen" -> navController.navigate(route = "adminHomeScreen")
+                    "userHomeScreen" -> navController.navigate(route = "userHomeScreen")
                     else -> navController.navigate(route = "login")
                 }
             }
@@ -30,10 +32,16 @@ fun ScreenManager() {
         registerScreen(
             route = "registerScreen",
             onItemClick = {
-                navController.navigate(route = "login")
+                navController.navigate(route = "userHomeScreen")
             },
             onLoginClick = {
                 navController.navigate(route = "login")
+            }
+        )
+        userHomeScreen(
+            route = "userHomeScreen",
+            onBonusClick = {
+                navController.navigate(route = "")//dodaj rutu za points screen
             }
         )
         adminHomeScreen(
