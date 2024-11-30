@@ -72,19 +72,17 @@ fun UserHomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp), // Horizontalno margina
+                .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Spacer(modifier = Modifier.weight(0.1f)) // Prostor na vrhu da sadržaj bude niže
-
-            // Naslov dobrodošlice
+            Spacer(modifier = Modifier.weight(0.1f))
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
                         Color(0xFFED6825),
                         shape = MaterialTheme.shapes.medium
-                    ) // Orange pozadina
+                    )
                     .padding(16.dp)
             ) {
                 Text(
@@ -99,18 +97,17 @@ fun UserHomeScreen(
                 )
             }
 
-            // Bonus poeni
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
                         Color(0xFF333333),
                         shape = MaterialTheme.shapes.medium
-                    ) // Grey pozadina
-                    .padding(horizontal = 16.dp, vertical = 12.dp) // Horizontalno i vertikalno padding
+                    )
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
                     .clickable { onBonusClick() },
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically // Vertikalno centriranje
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
                     Text(
@@ -131,14 +128,13 @@ fun UserHomeScreen(
                 )
             }
 
-            // Najbliža stanica
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
                         Color(0xFF333333),
                         shape = MaterialTheme.shapes.medium
-                    ) // Grey pozadina
+                    )
                     .padding(16.dp)
             ) {
                 // Naslov sekcije
@@ -155,38 +151,34 @@ fun UserHomeScreen(
                     color = Color.White
                 )
 
-                Spacer(modifier = Modifier.height(8.dp)) // Razmak ispod podnaslova
-
-                // Red za ikonicu automobila i udaljenost
+                Spacer(modifier = Modifier.height(8.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(bottom = 4.dp) // Mali razmak ispod reda
+                    modifier = Modifier.padding(bottom = 4.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_car2_icon),
                         contentDescription = "Car Icon",
-                        tint = Color(0xFFED6825), // Narandžasta boja ikone
+                        tint = Color(0xFFED6825),
                         modifier = Modifier.size(16.dp)
                     )
-                    Spacer(modifier = Modifier.width(8.dp)) // Razmak između ikone i teksta
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "1.7km, 6min",
                         style = poppinsRegular.copy(fontSize = MaterialTheme.typography.bodySmall.fontSize),
                         color = Color.Gray
                     )
                 }
-
-                // Red za ikonicu sata i dostupnost
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_clock_icon),
                         contentDescription = "Clock Icon",
-                        tint = Color(0xFFED6825), // Narandžasta boja ikone
+                        tint = Color(0xFFED6825),
                         modifier = Modifier.size(16.dp)
                     )
-                    Spacer(modifier = Modifier.width(8.dp)) // Razmak između ikone i teksta
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "24/7",
                         style = poppinsRegular.copy(fontSize = MaterialTheme.typography.bodySmall.fontSize),
@@ -194,20 +186,16 @@ fun UserHomeScreen(
                     )
                 }
             }
-
-            // Transakcije sekcija
             Text(
                 text = "Recent Transactions",
                 style = poppinsBold.copy(fontSize = MaterialTheme.typography.titleMedium.fontSize),
                 color = Color.White,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-
-            // LazyColumn za transakcije
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f) // Omogućava skrolovanje unutar dostupnog prostora
+                    .weight(1f)
             ) {
                 items(state.transactions) { transaction ->
                     Row(
@@ -216,12 +204,11 @@ fun UserHomeScreen(
                             .background(
                                 Color(0xFF333333),
                                 shape = MaterialTheme.shapes.medium
-                            ) // Grey pozadina
-                            .padding(horizontal = 16.dp, vertical = 12.dp) // Unutrašnji razmak
+                            )
+                            .padding(horizontal = 16.dp, vertical = 12.dp)
                     ) {
-                        // Leva strana - opis i datum u koloni
                         Column(
-                            modifier = Modifier.weight(1f) // Zauzima sav raspoloživ prostor na levoj strani
+                            modifier = Modifier.weight(1f)
                         ) {
                             Text(
                                 text = transaction.description,
@@ -235,19 +222,18 @@ fun UserHomeScreen(
                             )
                         }
 
-                        // Desna strana - poeni
                         Text(
                             text = "+${transaction.bonusPoints} pts",
                             style = poppinsMedium.copy(fontSize = MaterialTheme.typography.bodyMedium.fontSize),
-                            color = Color(0xFFED6825), // Narandžasti tekst za poene
-                            modifier = Modifier.padding(top = 8.dp) // Blago spušta poene
+                            color = Color(0xFFED6825),
+                            modifier = Modifier.padding(top = 8.dp)
                         )
                     }
-                    Spacer(modifier = Modifier.height(8.dp)) // Razmak između stavki
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
 
-            Spacer(modifier = Modifier.weight(0.1f)) // Prostor na dnu za balansiranje sadržaja
+            Spacer(modifier = Modifier.weight(0.1f))
         }
     }
 }

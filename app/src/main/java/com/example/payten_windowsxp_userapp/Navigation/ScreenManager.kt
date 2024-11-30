@@ -89,8 +89,10 @@ fun ScreenManager() {
             )
             localScreen(
                 route = "localScreen/{localId}",
-
-                )
+                onBackClick = {
+                    navController.navigateUp();
+                }
+            )
             editLocalScreen(
                 route = "editLocalScreen/{editLocalId}",
             )
