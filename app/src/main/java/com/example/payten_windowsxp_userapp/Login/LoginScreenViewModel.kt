@@ -43,21 +43,21 @@ class LoginScreenViewModel @Inject constructor(
             val transactions = listOf(
                 Transaction(
                     id = 0, // Auto-generisan ID
-                    userId = 2, // Povezivanje sa korisnikom sa ID 3
+                    userId = 1, // Povezivanje sa korisnikom sa ID 3
                     description = "Car Wash Box 1",
                     bonusPoints = 20,
                     date = "30-11-2024"
                 ),
                 Transaction(
                     id = 0, // Auto-generisan ID
-                    userId = 2, // Povezivanje sa korisnikom sa ID 3
+                    userId = 1, // Povezivanje sa korisnikom sa ID 3
                     description = "Car Wash Box 2",
                     bonusPoints = 50,
                     date = "01-12-2024"
                 ),
                 Transaction(
                     id = 0, // Auto-generisan ID
-                    userId = 2, // Povezivanje sa korisnikom sa ID 3
+                    userId = 1, // Povezivanje sa korisnikom sa ID 3
                     description = "Car Wash Box 3",
                     bonusPoints = 30,
                     date = "02-12-2024"

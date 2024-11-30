@@ -1,4 +1,4 @@
-package com.example.payten_windowsxp_userapp.Users.user
+package com.example.payten_windowsxp_userapp.Users.user.userhomescreen
 
 import com.example.payten_windowsxp_userapp.Users.user.db.Transaction
 
@@ -9,7 +9,6 @@ interface UserHomeScreenContract {
         val name: String = "",
         val bonusPoints: Long = 0,
         val transactions: List<Transaction> = emptyList()
-        //dodaj za recent transactions bazu i posle ovde listu
     )
 
     sealed class UserHomeScreenEvent {
