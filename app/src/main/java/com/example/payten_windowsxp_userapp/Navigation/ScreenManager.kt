@@ -16,6 +16,7 @@ import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.EditLocalScr
 import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.localScreen
 import com.example.payten_windowsxp_userapp.Users.Admin.adminHomeScreen
 import com.example.payten_windowsxp_userapp.Users.user.QR.generateQRScreen
+import com.example.payten_windowsxp_userapp.Users.user.locationScreen.locationScreen
 import com.example.payten_windowsxp_userapp.Users.user.profile.userProfileScreen
 import com.example.payten_windowsxp_userapp.Users.user.userhomescreen.userHomeScreen
 
@@ -71,6 +72,9 @@ fun ScreenManager() {
                 onBackClick = {
                     navController.navigateUp();
                 }
+            )
+            locationScreen(
+                route = "locationScreen"
             )
             userProfileScreen(
                 route = "userProfile",
