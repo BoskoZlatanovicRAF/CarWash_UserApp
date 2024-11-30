@@ -26,52 +26,55 @@ class LoginScreenViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(LoginScreenContract.LoginScreenUiState())
     val state = _state.asStateFlow()
-    private fun setState(reducer: LoginScreenContract.LoginScreenUiState.() ->
-    LoginScreenContract.LoginScreenUiState
+    private fun setState(
+        reducer: LoginScreenContract.LoginScreenUiState.() ->
+        LoginScreenContract.LoginScreenUiState
     ) = _state.update(reducer)
 
     private val events = MutableSharedFlow<LoginScreenContract.LoginScreenUiEvent>()
-    fun setEvent(event: LoginScreenContract.LoginScreenUiEvent) = viewModelScope.launch { events.emit(event) }
+    fun setEvent(event: LoginScreenContract.LoginScreenUiEvent) =
+        viewModelScope.launch { events.emit(event) }
 
     init {
-        addAdmin()
+        addUsers()
+        addTransactions()
         observeEvents()
     }
 
     private fun addTransactions() {
         viewModelScope.launch {
-            val transactions = listOf(
-                Transaction(
-                    id = 0, // Auto-generisan ID
-                    userId = 1, // Povezivanje sa korisnikom sa ID 3
-                    description = "Car Wash Box 1",
-                    bonusPoints = 20,
-                    date = "30-11-2024"
-                ),
-                Transaction(
-                    id = 0, // Auto-generisan ID
-                    userId = 1, // Povezivanje sa korisnikom sa ID 3
-                    description = "Car Wash Box 2",
-                    bonusPoints = 50,
-                    date = "01-12-2024"
-                ),
-                Transaction(
-                    id = 0, // Auto-generisan ID
-                    userId = 1, // Povezivanje sa korisnikom sa ID 3
-                    description = "Car Wash Box 3",
-                    bonusPoints = 30,
-                    date = "02-12-2024"
+            if (transactionRepository.getTransactionsCount() < 3) {
+                val transactions = listOf(
+                    Transaction(
+                        id = 0,
+                        userId = 2,
+                        description = "Car Wash Box 1",
+                        bonusPoints = 20,
+                        date = "30-11-2024"
+                    ),
+                    Transaction(
+                        id = 0,
+                        userId = 2,
+                        description = "Car Wash Box 2",
+                        bonusPoints = 50,
+                        date = "01-12-2024"
+                    ),
+                    Transaction(
+                        id = 0,
+                        userId = 2,
+                        description = "Car Wash Box 3",
+                        bonusPoints = 30,
+                        date = "02-12-2024"
+                    )
                 )
-            )
-
-            // Umetanje transakcija u bazu podataka
-            transactions.forEach { transaction ->
-                transactionRepository.insertTransaction(transaction)
+                transactions.forEach { transaction ->
+                    transactionRepository.insertTransaction(transaction)
+                }
             }
         }
     }
 
-    private fun addAdmin() {
+    private fun addUsers() {
         viewModelScope.launch {
             if (userRepository.getUserCount() < 1) {
                 val user = User(
@@ -83,6 +86,21 @@ class LoginScreenViewModel @Inject constructor(
                     birthdate = "01-01-2000",
                     password = "admin",
                     role = RoleEnum.ADMIN,
+                    bonusPoints = 0,
+                    time = "00:00"
+                )
+                userRepository.insertUser(user)
+            }
+            if (userRepository.getUserCount() < 2) {
+                val user = User(
+                    id = 2,
+                    firstname = "User",
+                    lastName = "User",
+                    email = "dusan@pajic.com",
+                    phoneNumber = "123456789",
+                    birthdate = "01-01-2000",
+                    password = "user",
+                    role = RoleEnum.USER,
                     bonusPoints = 0,
                     time = "00:00"
                 )
@@ -107,7 +125,7 @@ class LoginScreenViewModel @Inject constructor(
                             } else {
                                 if (user.password == password) {
                                     setState { copy(User = user) }
-                                    if(user.role == RoleEnum.ADMIN){
+                                    if (user.role == RoleEnum.ADMIN) {
                                         setState { copy(isAdmin = true) }
                                     }
                                     authStore.updateAuthData(

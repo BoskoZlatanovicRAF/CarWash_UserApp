@@ -17,4 +17,7 @@ interface TransactionDao {
 
     @Query("SELECT * FROM transactions")
     suspend fun getAllTransactions(): List<Transaction>
+
+    @Query("SELECT COUNT(*) FROM transactions")
+    suspend fun getTransactionsCount(): Int
 }

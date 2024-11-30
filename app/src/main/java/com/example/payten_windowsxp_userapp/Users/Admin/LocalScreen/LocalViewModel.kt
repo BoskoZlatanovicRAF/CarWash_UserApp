@@ -53,7 +53,7 @@ class LocalViewModel @Inject constructor(
 
     private fun insertTokens() {
         viewModelScope.launch {
-            if(repositoryToken.getNumberOfTokens() < 5) {
+            if(repositoryToken.getNumberOfTokens() == 0) {
                 val token1 = Token(
                     id = 0,
                     locationID = "1",
