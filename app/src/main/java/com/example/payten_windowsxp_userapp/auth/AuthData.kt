@@ -11,5 +11,6 @@ data class AuthData(
     val lastName: String,
     val email: String,
     val bonusPoints: Long,
-    val time: String
+    val time: String,
+    val role: RoleEnum
 )

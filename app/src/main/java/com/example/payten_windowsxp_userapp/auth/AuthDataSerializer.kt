@@ -3,6 +3,7 @@ package com.example.payten_windowsxp_userapp.auth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import androidx.datastore.core.Serializer
+import com.example.payten_windowsxp_userapp.Users.RoleEnum
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.InputStream
@@ -10,7 +11,7 @@ import java.io.OutputStream
 
 class AuthDataSerializer : Serializer<AuthData> {
 
-    override val defaultValue: AuthData = AuthData(0,"","","",0, "")
+    override val defaultValue: AuthData = AuthData(0,"","","",0, "", RoleEnum.USER)
 
     override suspend fun readFrom(input: InputStream): AuthData {
         return withContext(Dispatchers.IO) {

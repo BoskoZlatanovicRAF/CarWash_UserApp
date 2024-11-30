@@ -136,7 +136,8 @@ class LoginScreenViewModel @Inject constructor(
                                             lastName = user.lastName,
                                             email = user.email,
                                             bonusPoints = user.bonusPoints,
-                                            time = user.time
+                                            time = user.time,
+                                            role = user.role
                                         )
                                     )
                                 } else {
