@@ -3,12 +3,14 @@ package com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.db
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+
 @Entity(
-    tableName = "locals"
+    tableName = "tokens"
 )
-data class Local (
+data class Token (
     @PrimaryKey(autoGenerate = true) val id: Int,
-    val name: String,
-    val address: String,
-    val boxNumber: Int,
+    val locationID: String,
+    val timeStart: String,
+    val timeEnd: String,
+    val price: Int,
 )

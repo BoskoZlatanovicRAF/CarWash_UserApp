@@ -4,7 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.payten_windowsxp_userapp.Navigation.localId
+import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.db.Token
 import com.example.payten_windowsxp_userapp.Users.repository.LocalsRepository
+import com.example.payten_windowsxp_userapp.Users.repository.TokenRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,9 +19,10 @@ import javax.inject.Inject
 @HiltViewModel
 class LocalViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val repository: LocalsRepository
+    private val repository: LocalsRepository,
+    private val repositoryToken: TokenRepository
 ) : ViewModel() {
-    private val localId: Long = savedStateHandle.localId
+    private val localId: String = savedStateHandle.localId
     private val _state = MutableStateFlow(LocalState())
     val state = _state.asStateFlow()
     private fun setState(reducer: LocalState.() -> LocalState) =
@@ -29,7 +32,66 @@ class LocalViewModel @Inject constructor(
     fun setEvent(event: LocalState.Events) = viewModelScope.launch { events.emit(event) }
 
     init {
+        insertTokens()
+        loadTokens()
         loadLocal()
+    }
+
+    private fun loadTokens() {
+        viewModelScope.launch {
+            setState { copy(fetching = true) }
+            try {
+                val tokens = repositoryToken.getAllTokens()
+                setState { copy(tokens = tokens) }
+            } catch (error: Exception) {
+                println("Error: ${error.message}")
+            } finally {
+                setState { copy(fetching = false) }
+            }
+        }
+    }
+
+    private fun insertTokens() {
+        viewModelScope.launch {
+            if(repositoryToken.getNumberOfTokens() < 5) {
+                val token1 = Token(
+                    id = 0,
+                    locationID = "1",
+                    timeStart = "10:00",
+                    timeEnd = "11:00",
+                    price = 10,
+                )
+                val token2 = Token(
+                    id = 0,
+                    locationID = "1",
+                    timeStart = "11:00",
+                    timeEnd = "12:00",
+                    price = 10,
+                )
+                val token3 = Token(
+                    id = 0,
+                    locationID = "1",
+                    timeStart = "12:00",
+                    timeEnd = "13:00",
+                    price = 10,
+                )
+                val token4 = Token(
+                    id = 0,
+                    locationID = "1",
+                    timeStart = "13:00",
+                    timeEnd = "14:00",
+                    price = 10,
+                )
+                val token5 = Token(
+                    id = 0,
+                    locationID = "1",
+                    timeStart = "14:00",
+                    timeEnd = "15:00",
+                    price = 10,
+                )
+                repositoryToken.insertAllTokens(listOf(token1, token2, token3, token4, token5))
+            }
+        }
     }
 
     private fun loadLocal() {

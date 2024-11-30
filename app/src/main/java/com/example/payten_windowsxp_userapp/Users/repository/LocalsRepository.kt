@@ -13,7 +13,7 @@ class LocalsRepository @Inject constructor(
         return database.localDao().getAllLocals()
     }
 
-    suspend fun getLocalByID(localId: Long): Local {
+    suspend fun getLocalByID(localId: String): Local {
         return database.localDao().getLocalById(localId)
     }
 
@@ -21,4 +21,8 @@ class LocalsRepository @Inject constructor(
         database.localDao().insertLocal(local)
     }
 
+    //getNumberOfLocals
+    suspend fun getNumberOfLocals(): Int {
+        return database.localDao().getNumberOfLocals()
+    }
 }

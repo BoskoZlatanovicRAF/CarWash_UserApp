@@ -13,15 +13,18 @@ interface LocalDao {
     suspend fun insertLocal(local: Local)
 
     @Query("DELETE FROM locals WHERE id = :id")
-    suspend fun deleteLocalByID(id: Long)
+    suspend fun deleteLocalByID(id: String)
 
     @Query("SELECT * FROM locals WHERE name = :name")
     suspend fun getLocalByName(name: String): Local
 
     @Query("SELECT * FROM locals WHERE id = :id")
-    suspend fun getLocalById(id: Long): Local
+    suspend fun getLocalById(id: String): Local
 
     @Query("SELECT * FROM locals")
     suspend fun getAllLocals(): List<Local>
+
+    @Query("SELECT COUNT(*) FROM locals")
+    suspend fun getNumberOfLocals(): Int
 
 }

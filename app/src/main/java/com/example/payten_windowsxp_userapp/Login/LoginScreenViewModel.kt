@@ -34,6 +34,7 @@ class LoginScreenViewModel @Inject constructor(
     fun setEvent(event: LoginScreenContract.LoginScreenUiEvent) = viewModelScope.launch { events.emit(event) }
 
     init {
+        addAdmin()
         observeEvents()
     }
 
@@ -72,19 +73,21 @@ class LoginScreenViewModel @Inject constructor(
 
     private fun addAdmin() {
         viewModelScope.launch {
-            val user = User(
-                id = 0,
-                firstname = "Admin",
-                lastName = "Admin",
-                email = "admin@admin.com",
-                phoneNumber = "123456789",
-                birthdate = "01-01-2000",
-                password = "admin",
-                role = RoleEnum.ADMIN,
-                bonusPoints = 0,
-                time = "00:00"
-            )
-            userRepository.insertUser(user)
+            if (userRepository.getUserCount() < 1) {
+                val user = User(
+                    id = 0,
+                    firstname = "Admin",
+                    lastName = "Admin",
+                    email = "admin@admin.com",
+                    phoneNumber = "123456789",
+                    birthdate = "01-01-2000",
+                    password = "admin",
+                    role = RoleEnum.ADMIN,
+                    bonusPoints = 0,
+                    time = "00:00"
+                )
+                userRepository.insertUser(user)
+            }
         }
     }
 

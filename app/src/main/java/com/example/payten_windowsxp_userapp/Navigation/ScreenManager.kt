@@ -47,14 +47,13 @@ fun ScreenManager() {
         adminHomeScreen(
             route = "adminHomeScreen",
             onItemClick = {
+                println("---------Local id: $it")
                 navController.navigate(route = "localScreen/${it}")
             },
         )
         localScreen(
             route = "localScreen/{localId}",
-            onItemClick = {
-                navController.navigate(route = "EditLocal/${it}")
-            },
+
         )
         editLocalScreen(
             route = "editLocalScreen/{editLocalId}",
@@ -62,8 +61,8 @@ fun ScreenManager() {
     }
 }
 
-inline val SavedStateHandle.localId: Long
+inline val SavedStateHandle.localId: String
     get() = checkNotNull(get("localId")) { "localId is mandatory" }
 
-inline val SavedStateHandle.editLocalId: Long
+inline val SavedStateHandle.editLocalId: String
     get() = checkNotNull(get("editLocalId")) { "editLocalId is mandatory" }
