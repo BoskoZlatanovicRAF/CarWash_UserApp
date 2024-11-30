@@ -54,8 +54,8 @@ fun ScreenManager() {
     }
 }
 
-inline val SavedStateHandle.localId: String
+inline val SavedStateHandle.localId: Long
     get() = checkNotNull(get("localId")) { "localId is mandatory" }
 
-inline val SavedStateHandle.editLocalId: String
+inline val SavedStateHandle.editLocalId: Long
     get() = checkNotNull(get("editLocalId")) { "editLocalId is mandatory" }

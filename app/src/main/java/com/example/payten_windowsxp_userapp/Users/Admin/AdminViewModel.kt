@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,7 +23,6 @@ class AdminViewModel @Inject constructor(
         _state.getAndUpdate(reducer)
 
     init {
-        insertLocal()
         loadLocals()
     }
 
@@ -37,7 +35,8 @@ class AdminViewModel @Inject constructor(
                 tokenPrice = 150,
                 boxNumber = 10
             )
-            repository.insertLocal(local)
+            val debugLocal = local // Temporary variable for debugging
+            repository.insertLocal(debugLocal)
         }
     }
 
@@ -48,9 +47,44 @@ class AdminViewModel @Inject constructor(
                 val locals = repository.getAllLocal()
                 setState { copy(locals = locals) }
             } catch (error: Exception) {
-                println("Errorr: ")
+                println("Error: ${error.message}")
             } finally {
                 setState { copy(fatching = false) }
+            }
+        }
+    }
+
+
+    // If you need to add a local, use this function instead
+    fun addNewLocal(name: String, address: String, tokenPrice: Int, boxNumber: Int) {
+        viewModelScope.launch {
+            val local = Local(
+                id = 0L,  // Let Room handle the ID generation
+                name = name,
+                address = address,
+                tokenPrice = tokenPrice,
+                boxNumber = boxNumber
+            )
+            repository.insertLocal(local)
+            loadLocals()  // Refresh the list after inserting
+        }
+    }
+
+    // If you need to initialize with default data, use this function
+    // and call it only when needed (e.g., from a setup screen)
+    fun initializeDefaultLocalIfNeeded() {
+        viewModelScope.launch {
+            val existingLocals = repository.getAllLocal()
+            if (existingLocals.isEmpty()) {
+                val local = Local(
+                    id = 0L,
+                    name = "Local1",
+                    address = "Address1",
+                    tokenPrice = 150,
+                    boxNumber = 10
+                )
+                repository.insertLocal(local)
+                loadLocals()
             }
         }
     }

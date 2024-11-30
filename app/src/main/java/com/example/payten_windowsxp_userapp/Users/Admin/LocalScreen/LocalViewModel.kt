@@ -19,7 +19,7 @@ class LocalViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: LocalsRepository
 ) : ViewModel() {
-    private val localId: String = savedStateHandle.localId
+    private val localId: Long = savedStateHandle.localId
     private val _state = MutableStateFlow(LocalState())
     val state = _state.asStateFlow()
     private fun setState(reducer: LocalState.() -> LocalState) =
@@ -39,7 +39,7 @@ class LocalViewModel @Inject constructor(
                 val local = repository.getLocalByID(localId)
                 setState { copy(local = local) }
             } catch (error: Exception) {
-                println("Errorr: ")
+                println("Error: ")
             } finally {
                 setState { copy(fetching = false) }
             }
