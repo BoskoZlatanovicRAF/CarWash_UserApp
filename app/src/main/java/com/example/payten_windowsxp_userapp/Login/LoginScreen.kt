@@ -43,6 +43,8 @@ import androidx.navigation.compose.composable
 import com.example.payten_windowsxp_userapp.R
 import com.example.payten_windowsxp_userapp.Registration.RegisterState
 import com.example.payten_windowsxp_userapp.Registration.registrationInput
+import com.example.payten_windowsxp_userapp.ui.theme.poppinsBold
+import com.example.payten_windowsxp_userapp.ui.theme.poppinsRegular
 import okhttp3.internal.wait
 
 
@@ -83,7 +85,7 @@ fun LoginScreen(
             if (state.User != null && state.isAdmin) {
                 onUserClick("adminHomeScreen")
             } else if (state.User != null) {
-                onUserClick("registerScreen") //-------------------------------
+                onUserClick("userHomeScreen")
             }
 
             Column(
@@ -102,17 +104,18 @@ fun LoginScreen(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = "Sign in to your\n\nAccount",
-                    fontSize = 42.sp,
-                    fontWeight = Bold,
+                    text = "Sign in to your\nAccount",
+                    fontSize = 36.sp,
+                    style = poppinsBold, // Prilagođeni font
                     color = Color.White,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Row() {
+                Row {
                     Text(
                         text = "Don’t have an account?",
                         fontSize = 16.sp,
+                        style = poppinsRegular, // Prilagođeni font
                         color = Color.White,
                         modifier = Modifier.clickable {
                         }
@@ -120,6 +123,7 @@ fun LoginScreen(
                     Text(
                         text = " Sign Up",
                         fontSize = 16.sp,
+                        style = poppinsBold, // Prilagođeni font
                         color = Color(0xFFED6825),
                         modifier = Modifier.clickable {
                             onUserClick("registerScreen")
@@ -139,8 +143,9 @@ fun LoginScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Forgot Your Password ?",
+                    text = "Forgot Your Password?",
                     fontSize = 18.sp,
+                    style = poppinsRegular, // Prilagođeni font
                     color = Color.White,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier
@@ -167,6 +172,7 @@ fun LoginScreen(
                     Text(
                         "Log In",
                         fontSize = 22.sp,
+                        style = poppinsBold, // Prilagođeni font
                         modifier = Modifier.padding(6.dp)
                     )
                 }
@@ -189,16 +195,23 @@ fun loginInput(
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            label = { Text(label, color = Color.Gray) },
+            label = {
+                Text(
+                    label,
+                    style = poppinsRegular.copy(color = Color.Gray) // Prilagođeni font
+                )
+            },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                containerColor = Color.White, // Dark grey
+                containerColor = Color.White,
                 focusedBorderColor = Color(0xFFED6825), // Orange
                 unfocusedBorderColor = Color.Gray,
-                cursorColor = Color.White
-            )
+                cursorColor = Color.Black
+            ),
+            textStyle = poppinsRegular.copy(fontSize = 16.sp) // Prilagođeni font za unos
         )
     }
 }
+
 

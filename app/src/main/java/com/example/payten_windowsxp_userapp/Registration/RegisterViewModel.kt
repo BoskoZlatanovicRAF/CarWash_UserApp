@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.payten_windowsxp_userapp.Users.RoleEnum
 import com.example.payten_windowsxp_userapp.Users.User
 import com.example.payten_windowsxp_userapp.Users.repository.UserRepository
+import com.example.payten_windowsxp_userapp.auth.AuthData
+import com.example.payten_windowsxp_userapp.auth.AuthStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val repository: UserRepository,
+    private val authStore: AuthStore
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(RegisterState())
@@ -37,6 +40,7 @@ class RegisterViewModel @Inject constructor(
             try {
                 val exist = repository.getUserCount() > 0;
                 setState { copy(exist = exist) }
+
             } catch (error: Exception) {
             } finally {
                 setState {  copy(fatching = false) }
@@ -92,6 +96,16 @@ class RegisterViewModel @Inject constructor(
                             try {
                                 repository.insertUser(user)
                                 setState { copy(SuccesRegister = true) }
+                                authStore.updateAuthData(
+                                    AuthData(
+                                        id = user.id,
+                                        firstname = user.firstname,
+                                        lastName = user.lastName,
+                                        email = user.email,
+                                        bonusPoints = user.bonusPoints,
+                                        time = user.time
+                                    )
+                                )
                             } catch (error: Exception) {
                                 println("Errorr: ${error.message}")
                             }

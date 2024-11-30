@@ -1,6 +1,5 @@
 package com.example.payten_windowsxp_userapp.Registration
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
@@ -39,8 +37,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,8 +48,9 @@ import androidx.compose.ui.window.Popup
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import coil.compose.rememberImagePainter
 import com.example.payten_windowsxp_userapp.R
+import com.example.payten_windowsxp_userapp.ui.theme.poppinsBold
+import com.example.payten_windowsxp_userapp.ui.theme.poppinsRegular
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -118,25 +117,29 @@ fun RegisterScreen(
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
                         text = "Create account",
-                        fontSize = 42.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White, // Bela boja za tekst
+                        fontSize = 36.sp,
+                        style = poppinsBold, // Prilagođeni font
+                        color = Color.White,
                         modifier = Modifier.padding(bottom = 8.dp),
                     )
-                    Row(){
+                    Row {
                         Text(
                             text = "Already have an account?",
                             fontSize = 16.sp,
-                            color = Color(0xFFFFFFFF), // Narandžasta za link
+                            style = poppinsRegular, // Prilagođeni font
+                            color = Color(0xFFFFFFFF),
                             modifier = Modifier.padding(bottom = 8.dp),
                         )
                         Text(
                             text = " Login",
                             fontSize = 16.sp,
-                            color = Color(0xFFED6825), // Narandžasta za link
-                            modifier = Modifier.padding(bottom = 8.dp).clickable{
-                                onLoginClick()
-                            },
+                            style = poppinsBold, // Prilagođeni font
+                            color = Color(0xFFED6825),
+                            modifier = Modifier
+                                .padding(bottom = 8.dp)
+                                .clickable {
+                                    onLoginClick()
+                                },
                         )
                     }
                     Column(
@@ -184,7 +187,8 @@ fun RegisterScreen(
                         Text(
                             text = "Register",
                             fontSize = 20.sp,
-                            color = Color.White, // Bela boja za tekst na dugmetu
+                            style = poppinsBold, // Prilagođeni font
+                            color = Color.White,
                             modifier = Modifier.padding(6.dp)
                         )
                     }
@@ -204,20 +208,25 @@ fun registrationInput(
     label: String,
     modifier: Modifier = Modifier
 ) {
-    Column(
-    ) {
+    Column {
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            label = { Text(label, color = Color.Gray) },
+            label = {
+                Text(
+                    text = label,
+                    style = poppinsRegular.copy(color = Color.Gray) // Prilagođeni font
+                )
+            },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                containerColor = Color.White, // Dark grey
+                containerColor = Color.White,
                 focusedBorderColor = Color(0xFFED6825), // Orange
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
-            )
+            ),
+            textStyle = poppinsRegular.copy(fontSize = 16.sp) // Prilagođeni font za unos
         )
     }
 }
@@ -303,7 +312,12 @@ fun LoadingEditProfile() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "Loading...", fontSize = 24.sp, color = Color.White)
+            Text(
+                text = "Loading...",
+                fontSize = 24.sp,
+                style = poppinsBold, // Prilagođeni font
+                color = Color.White
+            )
             Spacer(modifier = Modifier.height(16.dp))
             CircularProgressIndicator(color = Color(0xFFED6825)) // Narandžasta boja za indikator
         }
