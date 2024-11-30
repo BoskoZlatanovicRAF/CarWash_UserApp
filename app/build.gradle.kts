@@ -118,4 +118,10 @@ dependencies {
 
     // DataStore
     implementation("androidx.datastore:datastore:1.1.1")
+
+    //Generate QR code
+    implementation ("com.google.zxing:core:3.4.0")
+
+    // Yandex Map
+    implementation ("com.yandex.android:maps.mobile:4.9.0-lite")
 }

@@ -1,4 +1,4 @@
-package com.example.payten_windowsxp_userapp.Users.user
+package com.example.payten_windowsxp_userapp.Users.user.userhomescreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,14 +27,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.payten_windowsxp_userapp.R
-import com.example.payten_windowsxp_userapp.Registration.RegisterScreen
-import com.example.payten_windowsxp_userapp.Registration.RegisterViewModel
 import com.example.payten_windowsxp_userapp.ui.theme.poppinsBold
 import com.example.payten_windowsxp_userapp.ui.theme.poppinsMedium
 import com.example.payten_windowsxp_userapp.ui.theme.poppinsRegular
@@ -42,6 +39,7 @@ import com.example.payten_windowsxp_userapp.ui.theme.poppinsRegular
 fun NavGraphBuilder.userHomeScreen(
     route: String,
     onBonusClick: () -> Unit,
+    onQrClick: () -> Unit,
 ) = composable(
     route = route,
 ) { navBackStackEntry ->
@@ -53,7 +51,8 @@ fun NavGraphBuilder.userHomeScreen(
         eventPublisher = {
             userHomeScreenViewModel.setEvent(it)
         },
-        onBonusClick = onBonusClick
+        onBonusClick = onBonusClick,
+        onQrClick = onQrClick
     )
 }
 
@@ -61,7 +60,8 @@ fun NavGraphBuilder.userHomeScreen(
 fun UserHomeScreen(
     state: UserHomeScreenContract.UserHomeScreenState,
     eventPublisher: (uiEvent: UserHomeScreenContract.UserHomeScreenEvent) -> Unit,
-    onBonusClick: () -> Unit
+    onBonusClick: () -> Unit,
+    onQrClick: () -> Unit
 ) = if (state.loading) {
     CircularProgressIndicator(modifier = Modifier.fillMaxSize())
 } else {
@@ -142,11 +142,11 @@ fun UserHomeScreen(
                     .padding(16.dp)
             ) {
                 // Naslov sekcije
-                Text(
-                    text = "Nearest car wash station",
-                    style = poppinsBold.copy(fontSize = MaterialTheme.typography.titleMedium.fontSize),
-                    color = Color.White
-                )
+//                Text(
+//                    text = "Nearest car wash station",
+//                    style = poppinsBold.copy(fontSize = MaterialTheme.typography.titleMedium.fontSize),
+//                    color = Color.White
+//                )
 
                 // Podnaslov sa nazivom
                 Text(
@@ -217,7 +217,7 @@ fun UserHomeScreen(
                                 Color(0xFF333333),
                                 shape = MaterialTheme.shapes.medium
                             ) // Grey pozadina
-                            .padding(horizontal = 16.dp, vertical = 12.dp) // Unutrašnji razmak
+                            .padding(horizontal = 16.dp, vertical = 10.dp) // Unutrašnji razmak
                     ) {
                         // Leva strana - opis i datum u koloni
                         Column(
@@ -247,7 +247,7 @@ fun UserHomeScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.weight(0.1f)) // Prostor na dnu za balansiranje sadržaja
+            //Spacer(modifier = Modifier.weight(0.1f)) // Prostor na dnu za balansiranje sadržaja
         }
     }
 }
