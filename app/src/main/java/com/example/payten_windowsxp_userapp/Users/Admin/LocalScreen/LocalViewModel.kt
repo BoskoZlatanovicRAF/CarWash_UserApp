@@ -57,39 +57,32 @@ class LocalViewModel @Inject constructor(
                 val token1 = Token(
                     id = 0,
                     locationID = "1",
-                    timeStart = "10:00",
+                    timeStart = "12:18",
                     timeEnd = "11:00",
                     price = 10,
                 )
                 val token2 = Token(
                     id = 0,
                     locationID = "1",
-                    timeStart = "11:00",
+                    timeStart = "18:00",
                     timeEnd = "12:00",
                     price = 10,
                 )
                 val token3 = Token(
                     id = 0,
                     locationID = "1",
-                    timeStart = "12:00",
-                    timeEnd = "13:00",
+                    timeStart = "00:00",
+                    timeEnd = "6:00",
                     price = 10,
                 )
                 val token4 = Token(
                     id = 0,
                     locationID = "1",
-                    timeStart = "13:00",
-                    timeEnd = "14:00",
+                    timeStart = "06:00",
+                    timeEnd = "12:00",
                     price = 10,
                 )
-                val token5 = Token(
-                    id = 0,
-                    locationID = "1",
-                    timeStart = "14:00",
-                    timeEnd = "15:00",
-                    price = 10,
-                )
-                repositoryToken.insertAllTokens(listOf(token1, token2, token3, token4, token5))
+                repositoryToken.insertAllTokens(listOf(token1, token2, token3, token4))
             }
         }
     }
