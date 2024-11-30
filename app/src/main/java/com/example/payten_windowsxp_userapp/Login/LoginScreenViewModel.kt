@@ -34,6 +34,7 @@ class LoginScreenViewModel @Inject constructor(
     fun setEvent(event: LoginScreenContract.LoginScreenUiEvent) = viewModelScope.launch { events.emit(event) }
 
     init {
+        //addTransactions()
         observeEvents()
     }
 

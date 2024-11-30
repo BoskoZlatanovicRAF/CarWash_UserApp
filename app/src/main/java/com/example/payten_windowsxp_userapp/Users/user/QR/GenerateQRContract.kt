@@ -10,8 +10,12 @@ interface GenerateQRContract {
         val firstName: String = "",
         val membership: String = "Gold",
         val discount: Double = 0.1,
-        val timeRemaining: Int = 300,
+        val timeRemaining: Int = 10,
         val qrBitmap: Bitmap? = null,
         val qrExpired: Boolean = false
     )
+
+    sealed class GenerateQREvent {
+        object RegenerateQrCode : GenerateQREvent()
+    }
 }

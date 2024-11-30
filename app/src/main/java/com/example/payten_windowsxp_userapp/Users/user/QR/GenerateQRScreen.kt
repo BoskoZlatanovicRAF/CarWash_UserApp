@@ -49,102 +49,116 @@ fun NavGraphBuilder.generateQRScreen(
     val state = generateQRViewModel.state.collectAsState()
     GenerateQRScreen(
         state = state.value,
-        onBackClick = onBackClick
+        onBackClick = onBackClick,
+        eventPublisher = {
+            generateQRViewModel.setEvent(it);
+        }
     )
 }
 
 @Composable
 fun GenerateQRScreen(
     state: GenerateQRContract.GenerateQRState,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    eventPublisher: (uiEvent: GenerateQRContract.GenerateQREvent) -> Unit
 ) {
-    if (state.loading) {
-        CircularProgressIndicator(modifier = Modifier.fillMaxSize())
-    } else {
-        Column(
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF212121))
+    ) {
+        // Ikona za povratak ("X") u gornjem levom uglu
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFF212121)),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .align(Alignment.TopStart) // Poravnanje u gornji levi ugao
+                .padding(16.dp) // Margina od ivice ekrana
+                .clickable { onBackClick() } // Povratak na prethodni ekran
         ) {
-            // Tekst iznad QR koda
-            Text(
-                text = if (!state.qrExpired) "Scan QR code on terminal" else "QR Code Expired",
-                style = poppinsBold.copy(
-                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                    color = if (!state.qrExpired) Color.White else Color.Red
-                ),
-                modifier = Modifier.padding(top = 16.dp, bottom = 32.dp)
+            Icon(
+                painter = painterResource(id = R.drawable.ic_close), // Ikona "X"
+                contentDescription = "Close",
+                tint = Color(0xFFED6825),
+                modifier = Modifier.size(24.dp)
             )
+        }
 
-            // QR Code ili poruka o isteku
-            if (!state.qrExpired) {
-                state.qrBitmap?.let { bitmap ->
-                    Image(
-                        bitmap = bitmap.asImageBitmap(),
-                        contentDescription = "QR Code",
-                        modifier = Modifier
-                            .size(250.dp)
-                            .background(Color(0xFF333333))
-                    )
-                }
-            } else {
-                Text(
-                    text = "QR Code nije dostupan.",
-                    style = poppinsRegular.copy(
-                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                        color = Color.Gray
-                    )
-                )
-            }
-
-            // Prikaz preostalog vremena
-            if (!state.qrExpired) {
-                Text(
-                    text = "Expires in ${formatTime(state.timeRemaining)}",
-                    style = poppinsRegular.copy(
-                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                        color = Color.White
-                    ),
-                    modifier = Modifier.padding(top = 8.dp, bottom = 32.dp)
-                )
-            }
-
-            // Dugme za zatvaranje
-            Row(
+        if (state.loading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        } else {
+            Column(
                 modifier = Modifier
-                    .padding(horizontal = 32.dp)
-                    .background(
-                        color = Color(0xFF333333),
-                        shape = MaterialTheme.shapes.large
-                    )
-                    .clickable { onBackClick() }
-                    .height(48.dp)
-                    .fillMaxWidth(0.9f),
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_close),
-                    contentDescription = "Close Icon",
-                    tint = Color(0xFFED6825),
-                    modifier = Modifier
-                        .padding(start = 16.dp)
-                        .size(24.dp)
+                Text(
+                    text = if (!state.qrExpired) "Scan QR code on terminal" else "QR Code Expired",
+                    style = poppinsBold.copy(
+                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                        color = if (!state.qrExpired) Color.White else Color.Red
+                    ),
+                    modifier = Modifier.padding(top = 16.dp, bottom = 32.dp)
                 )
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 40.dp),
-                    contentAlignment = Alignment.Center
-                ) {
+                if (!state.qrExpired) {
+                    state.qrBitmap?.let { bitmap ->
+                        Image(
+                            bitmap = bitmap.asImageBitmap(),
+                            contentDescription = "QR Code",
+                            modifier = Modifier
+                                .size(250.dp)
+                                .background(Color(0xFF333333))
+                        )
+                    }
+                } else {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        modifier = Modifier
+                            .padding(horizontal = 32.dp)
+                            .background(
+                                color = Color(0xFF333333),
+                                shape = MaterialTheme.shapes.large
+                            )
+                            .clickable { eventPublisher(GenerateQRContract.GenerateQREvent.RegenerateQrCode) }
+                            .height(48.dp)
+                            .fillMaxWidth(0.9f),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_refresh_24),
+                            contentDescription = "Refresh QR Code",
+                            tint = Color(0xFFED6825),
+                            modifier = Modifier
+                                .padding(start = 16.dp)
+                                .size(24.dp)
+                        )
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 40.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Regenerate QR",
+                                style = poppinsBold.copy(
+                                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                                    color = Color.White
+                                )
+                            )
+                        }
+                    }
+                }
+
+                if (!state.qrExpired) {
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Close",
-                        style = poppinsBold.copy(
+                        text = "Expires in ${formatTime(state.timeRemaining)}",
+                        style = poppinsRegular.copy(
                             fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                             color = Color.White
-                        )
+                        ),
+                        modifier = Modifier.padding(top = 8.dp, bottom = 32.dp)
                     )
                 }
             }

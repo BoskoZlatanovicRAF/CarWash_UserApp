@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.payten_windowsxp_userapp.Login.LoginScreenContract
 import com.example.payten_windowsxp_userapp.Users.user.QR.GenerateQRContract.GenerateQRState
 import com.example.payten_windowsxp_userapp.Users.user.userhomescreen.UserHomeScreenContract
 import com.example.payten_windowsxp_userapp.auth.AuthStore
@@ -28,8 +29,22 @@ class GenerateQRViewModel @Inject constructor(
 
     private fun setState(reducer: GenerateQRState.() -> GenerateQRState) = _state.update(reducer)
 
+    private val events = MutableSharedFlow<GenerateQRContract.GenerateQREvent>()
+    fun setEvent(event: GenerateQRContract.GenerateQREvent) = viewModelScope.launch { events.emit(event) }
+
     init {
         loadFromDataStore();
+        observeEvents()
+    }
+
+    private fun observeEvents() {
+        viewModelScope.launch {
+            events.collect { event ->
+                when (event) {
+                    is GenerateQRContract.GenerateQREvent.RegenerateQrCode -> regenerateQrCode()
+                }
+            }
+        }
     }
 
     private fun loadFromDataStore() {
@@ -90,5 +105,27 @@ class GenerateQRViewModel @Inject constructor(
         }
     }
 
-
+    private fun regenerateQrCode() {
+        viewModelScope.launch {
+            setState { copy(loading = true, qrExpired = false, timeRemaining = 10) } // Resetuj stanje
+            val authData = authStore.authData.value
+            if (authData.firstname.isNotEmpty()) {
+                val qrCode = generateQrCode(
+                    userId = authData.id,
+                    membership = "Gold",
+                    discount = 0.1,
+                    firstName = authData.firstname
+                )
+                setState {
+                    copy(
+                        loading = false,
+                        qrBitmap = qrCode
+                    )
+                }
+                startTimer() // Pokreni novi tajmer
+            } else {
+                setState { copy(loading = false) }
+            }
+        }
+    }
 }

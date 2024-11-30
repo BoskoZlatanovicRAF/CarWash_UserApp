@@ -217,7 +217,7 @@ fun UserHomeScreen(
                                 Color(0xFF333333),
                                 shape = MaterialTheme.shapes.medium
                             ) // Grey pozadina
-                            .padding(horizontal = 16.dp, vertical = 12.dp) // Unutrašnji razmak
+                            .padding(horizontal = 16.dp, vertical = 10.dp) // Unutrašnji razmak
                     ) {
                         // Leva strana - opis i datum u koloni
                         Column(
@@ -247,7 +247,7 @@ fun UserHomeScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.weight(0.1f)) // Prostor na dnu za balansiranje sadržaja
+            //Spacer(modifier = Modifier.weight(0.1f)) // Prostor na dnu za balansiranje sadržaja
         }
     }
 }
