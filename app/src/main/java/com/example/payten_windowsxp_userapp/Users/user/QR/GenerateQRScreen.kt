@@ -56,7 +56,7 @@ fun NavGraphBuilder.generateQRScreen(
 @Composable
 fun GenerateQRScreen(
     state: GenerateQRContract.GenerateQRState,
-    onBackClick: () -> Unit // Akcija za zatvaranje ekrana
+    onBackClick: () -> Unit
 ) {
     if (state.loading) {
         CircularProgressIndicator(modifier = Modifier.fillMaxSize())
@@ -64,46 +64,52 @@ fun GenerateQRScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF212121)), // Crna pozadina
+                .background(Color(0xFF212121)),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Tekst iznad QR koda
             Text(
-                text = "Scan QR code on terminal",
+                text = if (!state.qrExpired) "Scan QR code on terminal" else "QR Code Expired",
                 style = poppinsBold.copy(
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                    color = Color.White
+                    color = if (!state.qrExpired) Color.White else Color.Red
                 ),
                 modifier = Modifier.padding(top = 16.dp, bottom = 32.dp)
             )
 
-            // QR Code
-            state.qrBitmap?.let { bitmap ->
-                Image(
-                    bitmap = bitmap.asImageBitmap(),
-                    contentDescription = "QR Code",
-                    modifier = Modifier
-                        .size(250.dp)
-                        .background(Color(0xFF333333))
+            // QR Code ili poruka o isteku
+            if (!state.qrExpired) {
+                state.qrBitmap?.let { bitmap ->
+                    Image(
+                        bitmap = bitmap.asImageBitmap(),
+                        contentDescription = "QR Code",
+                        modifier = Modifier
+                            .size(250.dp)
+                            .background(Color(0xFF333333))
+                    )
+                }
+            } else {
+                Text(
+                    text = "QR Code nije dostupan.",
+                    style = poppinsRegular.copy(
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                        color = Color.Gray
+                    )
                 )
-            } ?: Text(
-                text = "QR Code nije generisan.",
-                style = poppinsRegular.copy(
-                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                    color = Color.Gray
-                )
-            )
+            }
 
-            // Tekst za tajmer
-            Text(
-                text = "Expires in 4:37",
-                style = poppinsRegular.copy(
-                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                    color = Color.White
-                ),
-                modifier = Modifier.padding(top = 8.dp,bottom = 32.dp)
-            )
+            // Prikaz preostalog vremena
+            if (!state.qrExpired) {
+                Text(
+                    text = "Expires in ${formatTime(state.timeRemaining)}",
+                    style = poppinsRegular.copy(
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        color = Color.White
+                    ),
+                    modifier = Modifier.padding(top = 8.dp, bottom = 32.dp)
+                )
+            }
 
             // Dugme za zatvaranje
             Row(
@@ -118,7 +124,6 @@ fun GenerateQRScreen(
                     .fillMaxWidth(0.9f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Ikonica "X" levo
                 Icon(
                     painter = painterResource(id = R.drawable.ic_close),
                     contentDescription = "Close Icon",
@@ -128,7 +133,6 @@ fun GenerateQRScreen(
                         .size(24.dp)
                 )
 
-                // Tekst "Close" centriran u sredini
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -146,4 +150,10 @@ fun GenerateQRScreen(
             }
         }
     }
+}
+
+fun formatTime(seconds: Int): String {
+    val minutes = seconds / 60
+    val secs = seconds % 60
+    return String.format("%02d:%02d", minutes, secs)
 }

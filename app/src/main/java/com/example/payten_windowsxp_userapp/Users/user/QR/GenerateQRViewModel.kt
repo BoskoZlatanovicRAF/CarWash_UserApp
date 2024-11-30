@@ -11,6 +11,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.QRCodeWriter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,7 +40,8 @@ class GenerateQRViewModel @Inject constructor(
                 val qrCode = generateQrCode(
                     userId = authData.id,
                     membership = "Gold", // ili dobijeno iz podataka
-                    discount = 0.1 // ili dobijeno iz podataka
+                    discount = 0.1, // ili dobijeno iz podataka,
+                    firstName = authData.firstname
                 )
                 setState {
                     copy(loading = false,
@@ -47,15 +49,16 @@ class GenerateQRViewModel @Inject constructor(
                         qrBitmap = qrCode
                     )
                 }
+                startTimer()
             } else {
                 setState { copy(loading = false) }
             }
         }
     }
 
-    private fun generateQrCode(userId: Long, membership: String, discount: Double): Bitmap? {
+    private fun generateQrCode(userId: Long, membership: String, discount: Double, firstName: String): Bitmap? {
         return try {
-            val qrContent = "USER_ID:$userId;MEMBERSHIP:$membership;DISCOUNT:$discount;"
+            val qrContent = "USER_ID:$userId;MEMBERSHIP:$membership;DISCOUNT:$discount;FIRST_NAME:$firstName"
             getQrCodeBitmap(qrContent)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -73,6 +76,17 @@ class GenerateQRViewModel @Inject constructor(
                     it.setPixel(x, y, if (bits[x, y]) Color.BLACK else Color.WHITE)
                 }
             }
+        }
+    }
+
+    private fun startTimer() {
+        viewModelScope.launch {
+            for (seconds in state.value.timeRemaining downTo 0) {
+                delay(1000L) // Čekaj 1 sekundu
+                setState { copy(timeRemaining = seconds) }
+            }
+            // Kada vreme istekne, označi QR kod kao nevažeći
+            setState { copy(qrExpired = true) }
         }
     }
 
