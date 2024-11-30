@@ -9,26 +9,13 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,44 +49,58 @@ fun LocationScreen(
         CarWashLocation(44.82414368294484, 20.39677149927324, "Car Wash 2")
     )
 ) {
-    var currentLocation by remember { mutableStateOf<Location?>(null) }
     var mapView by remember { mutableStateOf<MapView?>(null) }
-    val context = LocalContext.current
-    val locationManager = remember { context.getSystemService(Context.LOCATION_SERVICE) as LocationManager }
+    var currentLocation by remember { mutableStateOf<Location?>(null) }
     var hasLocationPermission by remember { mutableStateOf(false) }
-    Log.d("LocationScreen", "Current location: ${currentLocation?.latitude}, ${currentLocation?.longitude}")
+    val context = LocalContext.current
 
-    // Request location permissions
-    val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        hasLocationPermission = permissions.entries.all { it.value }
-        if (hasLocationPermission) {
-            // Precise location access granted
-            try {
-                if (ActivityCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    ) == PackageManager.PERMISSION_GRANTED
-                ) {
+
+    fun startLocationUpdates(locationManager: LocationManager) {
+        try {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED) {
+
+                // Prvo probaj da dobiješ poslednju poznatu GPS lokaciju
+                locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)?.let {
+                    currentLocation = it
+                }
+
+                // Registruj update-ove za GPS
+                locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    5000L,
+                    10f
+                ) { location ->
+                    currentLocation = location
+                }
+
+                // Ako GPS nije dostupan, koristi network provider
+                if (currentLocation == null) {
                     locationManager.requestLocationUpdates(
-                        LocationManager.GPS_PROVIDER,
+                        LocationManager.NETWORK_PROVIDER,
                         5000L,
                         10f
                     ) { location ->
-                        currentLocation = location
+                        if (currentLocation == null || location.accuracy < currentLocation!!.accuracy) {
+                            currentLocation = location
+                        }
                     }
                 }
-            } catch (e: SecurityException) {
-                // Handle exception
-                Log.e("LocationScreen", "Security Exception: ${e.message}")
             }
+        } catch (e: SecurityException) {
+            Log.e("LocationScreen", "Error getting location updates: ${e.message}")
+        }
+    }
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        hasLocationPermission = permissions.values.all { it }
+        if (hasLocationPermission) {
+            val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            startLocationUpdates(locationManager)
         }
     }
 
-    Log.d("LocationScreen", "$hasLocationPermission")
-
-    // Request permissions when screen launches
     LaunchedEffect(Unit) {
         launcher.launch(
             arrayOf(
@@ -110,6 +111,24 @@ fun LocationScreen(
         MapKitFactory.getInstance().onStart()
     }
 
+    LaunchedEffect(currentLocation) {
+        Log.d("LocationScreen", "Location update received u LaunchedEffect: ${currentLocation?.latitude}, ${currentLocation?.longitude}")
+        currentLocation?.let { location ->
+            mapView?.map?.move(
+                CameraPosition(
+                    Point(location.latitude, location.longitude),
+                    12.0f,
+                    0.0f,
+                    0.0f
+                ),
+                Animation(Animation.Type.SMOOTH, 0.3f),
+                null
+            )
+        }
+    }
+
+    Log.d("LocationScreen", "Current location: ${currentLocation?.latitude} ; ${currentLocation?.longitude}")
+
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
             factory = { context ->
@@ -117,16 +136,11 @@ fun LocationScreen(
                     mapView = this
                     map.move(
                         CameraPosition(
-                            Point(
-                                currentLocation?.latitude ?: 44.837411,
-                                currentLocation?.longitude ?: 20.402724
-                            ),
+                            Point(44.837411, 20.402724),
                             12.0f,
                             0.0f,
                             0.0f
-                        ),
-                        Animation(Animation.Type.SMOOTH, 0f),
-                        null
+                        )
                     )
 
                     map.isZoomGesturesEnabled = true
@@ -142,43 +156,45 @@ fun LocationScreen(
                             addTapListener { _, _ -> true }
                         }
                     }
-
-                    // Add current location marker only if we have permission and location
-                    if (hasLocationPermission && currentLocation != null) {
-                        currentLocation?.let { location ->
-                            try {
-                                map.mapObjects.addPlacemark(
-                                    Point(location.latitude, location.longitude)
-                                ).apply {
-                                    setIcon(ImageProvider.fromAsset(context, "current_location_marker.png"))
-
-                                    // Add this to check if marker is set
-                                    Log.d("LocationScreen", "Current location marker added at: ${location.latitude}, ${location.longitude}")
-                                }
-                            } catch (e: Exception) {
-                                Log.e("LocationScreen", "Error adding current location marker: ${e.message}")
-                            }
-                        }
-                    }
                 }
             },
             modifier = Modifier.fillMaxSize()
         )
 
-        // Zoom buttons container
+        // Update current location marker
+        currentLocation?.let { location ->
+            LaunchedEffect(location) {
+                mapView?.map?.mapObjects?.apply {
+                    clear()
+                    locations.forEach { carWash ->
+                        addPlacemark(
+                            Point(carWash.latitude, carWash.longitude)
+                        ).apply {
+                            setIcon(ImageProvider.fromAsset(context, "car_wash_marker.png"))
+                        }
+                    }
+                    addPlacemark(
+                        Point(location.latitude, location.longitude)
+                    ).apply {
+                        setIcon(ImageProvider.fromAsset(context, "current_location_marker.png"))
+                    }
+                }
+            }
+        }
+
+        // Zoom controls
         Box(
             modifier = Modifier
-                .align(Alignment.TopEnd) // Postavlja u gornji desni ugao
-                .padding(top = 16.dp, end = 16.dp) // Razmak od ivica
+                .align(Alignment.TopEnd)
+                .padding(top = 16.dp, end = 16.dp)
                 .background(
                     color = Color.White.copy(alpha = 0.8f),
                     shape = RoundedCornerShape(8.dp)
                 )
-                .size(48.dp) // Dimenzije kvadrata
+                .size(48.dp)
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -198,7 +214,7 @@ fun LocationScreen(
                             )
                         }
                     },
-                    modifier = Modifier.size(24.dp) // Smanjujemo dugmiće
+                    modifier = Modifier.size(24.dp)
                 ) {
                     Icon(Icons.Rounded.KeyboardArrowUp, "Zoom In", modifier = Modifier.size(20.dp))
                 }
@@ -219,16 +235,13 @@ fun LocationScreen(
                             )
                         }
                     },
-                    modifier = Modifier.size(24.dp) // Smanjujemo dugmiće
+                    modifier = Modifier.size(24.dp)
                 ) {
                     Icon(Icons.Rounded.KeyboardArrowDown, "Zoom Out", modifier = Modifier.size(20.dp))
                 }
             }
         }
     }
-
-
-
 
     DisposableEffect(Unit) {
         onDispose {
