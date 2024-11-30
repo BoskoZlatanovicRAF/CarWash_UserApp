@@ -131,31 +131,6 @@ fun UserHomeScreen(
                 )
             }
 
-            // Sekcija za QR dugme
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        Color(0xFF333333),
-                        shape = MaterialTheme.shapes.medium
-                    ) // Grey pozadina
-                    .padding(horizontal = 16.dp, vertical = 12.dp) // Padding
-                    .clickable { onQrClick() },
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Generate QR Code",
-                    style = poppinsBold.copy(fontSize = MaterialTheme.typography.titleMedium.fontSize),
-                    color = Color.White
-                )
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowRight,
-                    contentDescription = "Arrow",
-                    tint = Color.White
-                )
-            }
-
             // Najbliža stanica
             Column(
                 modifier = Modifier
@@ -167,11 +142,11 @@ fun UserHomeScreen(
                     .padding(16.dp)
             ) {
                 // Naslov sekcije
-                Text(
-                    text = "Nearest car wash station",
-                    style = poppinsBold.copy(fontSize = MaterialTheme.typography.titleMedium.fontSize),
-                    color = Color.White
-                )
+//                Text(
+//                    text = "Nearest car wash station",
+//                    style = poppinsBold.copy(fontSize = MaterialTheme.typography.titleMedium.fontSize),
+//                    color = Color.White
+//                )
 
                 // Podnaslov sa nazivom
                 Text(
