@@ -234,6 +234,7 @@ fun UserHomeScreen(
             }
 
             Spacer(modifier = Modifier.weight(0.1f))
+            //Spacer(modifier = Modifier.weight(0.1f)) // Prostor na dnu za balansiranje sadržaja
         }
     }
 }

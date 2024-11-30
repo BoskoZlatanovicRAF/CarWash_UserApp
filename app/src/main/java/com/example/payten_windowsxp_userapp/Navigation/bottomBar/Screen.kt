@@ -28,7 +28,7 @@ sealed interface Screen {
         @DrawableRes val selectedIcon: Int
     ) : Screen
     object Home : VectorScreen("userHomeScreen", Icons.Outlined.Home, Icons.Rounded.Home)
-    object Location : VectorScreen("location", Icons.Outlined.LocationOn, Icons.Rounded.LocationOn)
+    object Location : VectorScreen("locationScreen", Icons.Outlined.LocationOn, Icons.Rounded.LocationOn)
     object QR : DrawableScreen("qrScreen",
         R.drawable.baseline_qr_code_scanner_24,
         R.drawable.baseline_qr_code_scanner_white)
