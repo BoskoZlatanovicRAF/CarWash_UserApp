@@ -15,6 +15,10 @@ class TransactionRepository @Inject constructor(
     suspend fun getTransactionsForUser(userId: Long): List<Transaction> {
         return database.transactionDao().getTransactionsForUser(userId)
     }
+    //getTransactionsCount
+    suspend fun getTransactionsCount(): Int {
+        return database.transactionDao().getTransactionsCount()
+    }
 
     suspend fun getAllTransactions(): List<Transaction> {
         return database.transactionDao().getAllTransactions()

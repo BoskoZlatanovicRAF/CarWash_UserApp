@@ -56,7 +56,7 @@ fun BottomNavigationBar(navController: NavController, currentRoute: String?) {
                                     Icon(
                                         painter = painterResource(if (currentRoute == screen.route) screen.selectedIcon else screen.unselectedIcon),
                                         contentDescription = screen.route,
-                                        modifier = Modifier.size(45.dp)  // Larger size for QR icon
+                                        modifier = Modifier.size(45.dp)
                                     )
                                 }
                             } else {

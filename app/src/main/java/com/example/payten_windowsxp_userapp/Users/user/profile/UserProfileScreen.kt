@@ -73,7 +73,7 @@ fun UserProfileScreen(
             ) {
                 Text(
                     text = "←", // Strelica nazad
-                    style = poppinsBold.copy(fontSize = 24.sp),
+                    style = poppinsBold.copy(fontSize = 36.sp),
                     color = Color(0xFFED6825),
                     modifier = Modifier
                         .clickable { onBackClick() }

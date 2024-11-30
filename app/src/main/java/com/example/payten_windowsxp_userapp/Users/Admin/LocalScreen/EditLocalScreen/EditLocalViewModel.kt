@@ -19,7 +19,7 @@ class EditLocalViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: LocalsRepository
 ) : ViewModel() {
-    private val editLocalId: Long = savedStateHandle.editLocalId
+    private val editLocalId: String = savedStateHandle.editLocalId
     private val _state = MutableStateFlow(EditLocalState())
     val state = _state.asStateFlow()
     private fun setState(reducer: EditLocalState.() -> EditLocalState) =
@@ -34,14 +34,14 @@ class EditLocalViewModel @Inject constructor(
 
     private fun loadLocal() {
         viewModelScope.launch {
-            setState { copy(fatching = true) }
+            setState { copy(fetching = true) }
             try {
                 val local = repository.getLocalByID(editLocalId)
                 setState { copy(local = local) }
             } catch (error: Exception) {
                 println("Errorr: ")
             } finally {
-                setState { copy(fatching = false) }
+                setState { copy(fetching = false) }
             }
         }
     }

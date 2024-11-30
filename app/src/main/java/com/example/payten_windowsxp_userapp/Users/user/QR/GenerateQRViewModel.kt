@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.payten_windowsxp_userapp.Login.LoginScreenContract
 import com.example.payten_windowsxp_userapp.Users.user.QR.GenerateQRContract.GenerateQRState
-import com.example.payten_windowsxp_userapp.Users.user.userhomescreen.UserHomeScreenContract
 import com.example.payten_windowsxp_userapp.auth.AuthStore
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType

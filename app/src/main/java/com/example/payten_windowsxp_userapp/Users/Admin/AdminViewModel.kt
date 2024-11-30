@@ -3,6 +3,7 @@ package com.example.payten_windowsxp_userapp.Users.Admin
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.db.Local
+import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.mapper.asLocalUI
 import com.example.payten_windowsxp_userapp.Users.repository.LocalsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,69 +24,85 @@ class AdminViewModel @Inject constructor(
         _state.getAndUpdate(reducer)
 
     init {
+        insertLocals()
         loadLocals()
     }
 
-    private fun insertLocal() {
+    private fun insertLocals() {
         viewModelScope.launch {
-            val local = Local(
-                id = 0,
-                name = "Local1",
-                address = "Address1",
-                tokenPrice = 150,
-                boxNumber = 10
-            )
-            val debugLocal = local // Temporary variable for debugging
-            repository.insertLocal(debugLocal)
+          val numberOfLocation = repository.getNumberOfLocals()
+            if(numberOfLocation <4){
+                insertLocal()
+                insertLocal2()
+                insertLocal3()
+                insertLocal4()
+            }
         }
     }
 
     private fun loadLocals() {
         viewModelScope.launch {
-            setState { copy(fatching = true) }
+            setState { copy(fetching = true) }
             try {
                 val locals = repository.getAllLocal()
-                setState { copy(locals = locals) }
+                setState { copy(locals = locals.map { it.asLocalUI() }) }
             } catch (error: Exception) {
                 println("Error: ${error.message}")
             } finally {
-                setState { copy(fatching = false) }
+                setState { copy(fetching = false) }
             }
         }
     }
+    private fun insertLocal4() {
+        viewModelScope.launch {
+            val local4 = Local(
+                id = 4,
+                name = "Wash Car 4",
+                address = "Beograd, Serbia",
+                boxNumber = 7
+            )
+            repository.insertLocal(local4)
+        }
+    }
 
+    private fun insertLocal3() {
+        viewModelScope.launch {
+            val local3 = Local(
+                id = 3,
+                name = "Wash Car 3",
+                address = "Beograd, Serbia",
+                boxNumber = 8
+            )
+            repository.insertLocal(local3)
+        }
+    }
 
-    // If you need to add a local, use this function instead
-    fun addNewLocal(name: String, address: String, tokenPrice: Int, boxNumber: Int) {
+    private fun insertLocal2() {
+        viewModelScope.launch {
+            val local2 = Local(
+                id = 2,
+                name = "Wash Car 2",
+                address = "Beograd, Serbia",
+                boxNumber = 6
+            )
+            repository.insertLocal(local2)
+        }
+    }
+
+    private fun insertLocal() {
         viewModelScope.launch {
             val local = Local(
-                id = 0L,  // Let Room handle the ID generation
-                name = name,
-                address = address,
-                tokenPrice = tokenPrice,
-                boxNumber = boxNumber
+                id = 1,
+                name = "Wash Car 1",
+                address = "Beograd, Serbia",
+                boxNumber = 10
             )
             repository.insertLocal(local)
-            loadLocals()  // Refresh the list after inserting
         }
     }
 
-    // If you need to initialize with default data, use this function
-    // and call it only when needed (e.g., from a setup screen)
-    fun initializeDefaultLocalIfNeeded() {
-        viewModelScope.launch {
-            val existingLocals = repository.getAllLocal()
-            if (existingLocals.isEmpty()) {
-                val local = Local(
-                    id = 0L,
-                    name = "Local1",
-                    address = "Address1",
-                    tokenPrice = 150,
-                    boxNumber = 10
-                )
-                repository.insertLocal(local)
-                loadLocals()
-            }
-        }
-    }
+
+
+
+
 }
