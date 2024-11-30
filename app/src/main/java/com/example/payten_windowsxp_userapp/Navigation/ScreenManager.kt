@@ -9,7 +9,8 @@ import com.example.payten_windowsxp_userapp.Registration.registerScreen
 import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.EditLocalScreen.editLocalScreen
 import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.localScreen
 import com.example.payten_windowsxp_userapp.Users.Admin.adminHomeScreen
-import com.example.payten_windowsxp_userapp.Users.user.userHomeScreen
+import com.example.payten_windowsxp_userapp.Users.user.QR.generateQRScreen
+import com.example.payten_windowsxp_userapp.Users.user.userhomescreen.userHomeScreen
 
 @Composable
 fun ScreenManager() {
@@ -42,6 +43,15 @@ fun ScreenManager() {
             route = "userHomeScreen",
             onBonusClick = {
                 navController.navigate(route = "")//dodaj rutu za points screen
+            },
+            onQrClick = {
+                navController.navigate(route = "qrScreen")
+            }
+        )
+        generateQRScreen(
+            route = "qrScreen",
+            onBackClick = {
+                navController.navigateUp();
             }
         )
         adminHomeScreen(

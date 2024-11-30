@@ -1,10 +1,10 @@
-package com.example.payten_windowsxp_userapp.Users.user
+package com.example.payten_windowsxp_userapp.Users.user.userhomescreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.payten_windowsxp_userapp.Users.repository.TransactionRepository
-import com.example.payten_windowsxp_userapp.Users.user.UserHomeScreenContract.UserHomeScreenEvent
-import com.example.payten_windowsxp_userapp.Users.user.UserHomeScreenContract.UserHomeScreenState
+import com.example.payten_windowsxp_userapp.Users.user.userhomescreen.UserHomeScreenContract.UserHomeScreenEvent
+import com.example.payten_windowsxp_userapp.Users.user.userhomescreen.UserHomeScreenContract.UserHomeScreenState
 import com.example.payten_windowsxp_userapp.auth.AuthStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

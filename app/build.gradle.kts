@@ -118,4 +118,7 @@ dependencies {
 
     // DataStore
     implementation("androidx.datastore:datastore:1.1.1")
+
+    //Generate QR code
+    implementation ("com.google.zxing:core:3.4.0")
 }
