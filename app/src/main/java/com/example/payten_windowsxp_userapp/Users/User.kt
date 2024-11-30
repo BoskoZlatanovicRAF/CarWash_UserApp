@@ -19,4 +19,7 @@ data class User (
     val birthdate: String,
     val password: String,
     val role: RoleEnum,
+    val bonusPoints: Long,
+    val time: String
+
 )
