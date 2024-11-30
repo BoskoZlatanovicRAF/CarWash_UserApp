@@ -34,5 +34,5 @@ sealed interface Screen {
         R.drawable.baseline_qr_code_scanner_24,
         R.drawable.baseline_qr_code_scanner_white)
     object Notifications : VectorScreen("notifications", Icons.Outlined.Notifications, Icons.Rounded.Notifications)
-    object Profile : VectorScreen("profile", Icons.Outlined.Person, Icons.Rounded.Person)
+    object Profile : VectorScreen("userProfile", Icons.Outlined.Person, Icons.Rounded.Person)
 }
