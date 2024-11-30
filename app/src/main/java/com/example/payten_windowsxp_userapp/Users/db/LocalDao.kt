@@ -9,7 +9,7 @@ import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.db.Local
 @Dao
 interface LocalDao {
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertLocal(local: Local)
 
     @Query("DELETE FROM locals WHERE id = :id")
@@ -23,7 +23,5 @@ interface LocalDao {
 
     @Query("SELECT * FROM locals")
     suspend fun getAllLocals(): List<Local>
-
-
 
 }

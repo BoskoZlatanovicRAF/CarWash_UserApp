@@ -6,8 +6,7 @@ import com.example.payten_windowsxp_userapp.Users.User
 data class AdminState(
     val fatching: Boolean = false,
     val User: User? = null,
-    val locals: List<Local> = mutableListOf(),
+    val locals: List<Local> = emptyList(),
 ) {
-    sealed class Events {
-    }
+
 }
