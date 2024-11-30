@@ -1,11 +1,7 @@
 package com.example.payten_windowsxp_userapp.Users.Admin
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import com.example.payten_windowsxp_userapp.Navigation.localId
 import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.db.Local
 import com.example.payten_windowsxp_userapp.Users.repository.LocalsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +9,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,28 +16,27 @@ import javax.inject.Inject
 class AdminViewModel @Inject constructor(
     private val repository: LocalsRepository
 ) : ViewModel() {
+
     private val _state = MutableStateFlow(AdminState())
     val state = _state.asStateFlow()
     private fun setState(reducer: AdminState.() -> AdminState) =
         _state.getAndUpdate(reducer)
 
-    private val events = MutableSharedFlow<AdminState.Events>()
-    fun setEvent(event: AdminState.Events) = viewModelScope.launch { events.emit(event) }
-
     init {
-      //  insertLocal()
         loadLocals()
     }
+
     private fun insertLocal() {
         viewModelScope.launch {
             val local = Local(
                 id = 0,
-                name = "Local 1",
-                address = "Address 1",
-                tokenPrice = 10,
+                name = "Local1",
+                address = "Address1",
+                tokenPrice = 150,
                 boxNumber = 10
             )
-            repository.insertLocal(local)
+            val debugLocal = local // Temporary variable for debugging
+            repository.insertLocal(debugLocal)
         }
     }
 
@@ -53,7 +47,7 @@ class AdminViewModel @Inject constructor(
                 val locals = repository.getAllLocal()
                 setState { copy(locals = locals) }
             } catch (error: Exception) {
-                println("Errorr: ")
+                println("Error: ${error.message}")
             } finally {
                 setState { copy(fatching = false) }
             }
@@ -61,5 +55,37 @@ class AdminViewModel @Inject constructor(
     }
 
 
+    // If you need to add a local, use this function instead
+    fun addNewLocal(name: String, address: String, tokenPrice: Int, boxNumber: Int) {
+        viewModelScope.launch {
+            val local = Local(
+                id = 0L,  // Let Room handle the ID generation
+                name = name,
+                address = address,
+                tokenPrice = tokenPrice,
+                boxNumber = boxNumber
+            )
+            repository.insertLocal(local)
+            loadLocals()  // Refresh the list after inserting
+        }
+    }
 
+    // If you need to initialize with default data, use this function
+    // and call it only when needed (e.g., from a setup screen)
+    fun initializeDefaultLocalIfNeeded() {
+        viewModelScope.launch {
+            val existingLocals = repository.getAllLocal()
+            if (existingLocals.isEmpty()) {
+                val local = Local(
+                    id = 0L,
+                    name = "Local1",
+                    address = "Address1",
+                    tokenPrice = 150,
+                    boxNumber = 10
+                )
+                repository.insertLocal(local)
+                loadLocals()
+            }
+        }
+    }
 }

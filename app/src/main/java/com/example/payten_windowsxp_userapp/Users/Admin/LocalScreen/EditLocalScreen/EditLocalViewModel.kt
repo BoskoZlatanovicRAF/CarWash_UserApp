@@ -19,7 +19,7 @@ class EditLocalViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: LocalsRepository
 ) : ViewModel() {
-    private val editLocalId: String = savedStateHandle.editLocalId
+    private val editLocalId: Long = savedStateHandle.editLocalId
     private val _state = MutableStateFlow(EditLocalState())
     val state = _state.asStateFlow()
     private fun setState(reducer: EditLocalState.() -> EditLocalState) =

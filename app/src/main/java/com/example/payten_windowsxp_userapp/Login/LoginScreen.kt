@@ -49,10 +49,10 @@ import okhttp3.internal.wait
 
 
 fun NavGraphBuilder.logIn(
-    route: String,
-    onUserClick: (String) -> Unit
+route: String,
+onUserClick: (String) -> Unit
 ) = composable(
-    route = route
+route = route
 ) {
     val loginScreenViewModel: LoginScreenViewModel = hiltViewModel<LoginScreenViewModel>()
     val state = loginScreenViewModel.state.collectAsState()
@@ -65,12 +65,13 @@ fun NavGraphBuilder.logIn(
         onUserClick = onUserClick
     )
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    state: LoginScreenContract.LoginScreenUiState,
-    eventPublisher: (uiEvent: LoginScreenContract.LoginScreenUiEvent) -> Unit,
-    onUserClick: (String) -> Unit
+state: LoginScreenContract.LoginScreenUiState,
+eventPublisher: (uiEvent: LoginScreenContract.LoginScreenUiEvent) -> Unit,
+onUserClick: (String) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     Scaffold(
@@ -184,10 +185,10 @@ fun LoginScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun loginInput(
-    value: String,
-    onValueChange: (String) -> Unit,
-    label: String,
-    modifier: Modifier = Modifier
+value: String,
+onValueChange: (String) -> Unit,
+label: String,
+modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier

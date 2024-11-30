@@ -21,7 +21,6 @@ fun ScreenManager() {
         logIn(
             route = "login",
             onUserClick = {
-                println("User clicked on: $it")
                 when (it) {
                     "registerScreen" -> navController.navigate(route = "registerScreen")
                     "adminHomeScreen" -> navController.navigate(route = "adminHomeScreen")
@@ -62,8 +61,9 @@ fun ScreenManager() {
         )
     }
 }
-inline val SavedStateHandle.localId: String
+
+inline val SavedStateHandle.localId: Long
     get() = checkNotNull(get("localId")) { "localId is mandatory" }
 
-inline val SavedStateHandle.editLocalId: String
+inline val SavedStateHandle.editLocalId: Long
     get() = checkNotNull(get("editLocalId")) { "editLocalId is mandatory" }

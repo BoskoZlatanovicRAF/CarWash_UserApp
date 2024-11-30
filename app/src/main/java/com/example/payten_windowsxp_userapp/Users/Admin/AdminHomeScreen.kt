@@ -28,7 +28,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.db.Local
 
-
 fun NavGraphBuilder.adminHomeScreen(
     route: String,
     onItemClick: (String) -> Unit,
@@ -38,12 +37,10 @@ fun NavGraphBuilder.adminHomeScreen(
 
     val adminViewModel: AdminViewModel = hiltViewModel(navBackStackEntry)
     val state = adminViewModel.state.collectAsState()
+
     AdminHomeScreen(
         state = state.value,
         onItemClick = onItemClick,
-        eventPublisher = {
-            adminViewModel.setEvent(it)
-        },
     )
 }
 
@@ -51,7 +48,6 @@ fun NavGraphBuilder.adminHomeScreen(
 fun AdminHomeScreen(
     state: AdminState,
     onItemClick: (String) -> Unit,
-    eventPublisher: (AdminState.Events) -> Unit,
 ) {
     if (!state.fatching) {
         LazyColumn(
@@ -68,7 +64,6 @@ fun AdminHomeScreen(
             }
         }
     }else Loading()
-
 }
 
 @Composable
@@ -118,9 +113,7 @@ fun Loading() {
     }
 }
 
-
 /*
-
 fun NavGraphBuilder.adminHomeScreen(
     route: String,
     onItemClick: () -> Unit,
