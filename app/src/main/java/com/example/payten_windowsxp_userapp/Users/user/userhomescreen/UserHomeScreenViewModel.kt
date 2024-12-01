@@ -26,28 +26,32 @@ class UserHomeScreenViewModel @Inject constructor(
     private val authStore: AuthStore,
     private val transactionRepository: TransactionRepository
 ) : ViewModel(){
+
     private val _state = MutableStateFlow(UserHomeScreenState())
     val state = _state.asStateFlow()
+
+    private fun setState(reducer: UserHomeScreenState.() -> UserHomeScreenState) = _state.update(reducer)
+    private val events = MutableSharedFlow<UserHomeScreenEvent>()
+    private val _navigationEvent = MutableSharedFlow<String>()
+
+    fun setEvent(event: UserHomeScreenEvent) = viewModelScope.launch { events.emit(event)}
 
     private val carWashLocations = listOf(
         CarWashLocation(44.837411, 20.402724, "Car Wash 1"),
         CarWashLocation(44.82414368294484, 20.39677149927324, "Car Wash 2"),
-        CarWashLocation(44.805052, 20.462605, "WindowsWash"), // vidljiva perionica
+        CarWashLocation(44.800371, 20.456867, "WindowsWash"),
+        CarWashLocation(44.792307, 20.491119, "Vracar Wash"),
+        CarWashLocation(44.774992, 20.476667, "Vozdovac Wash"),
+        CarWashLocation(44.778358, 20.415154, "Banovo Brdo Wash")// vidljiva perionica
     )
 
-    private fun setState(reducer: UserHomeScreenState.() -> UserHomeScreenState) = _state.update(reducer)
-    private val events = MutableSharedFlow<UserHomeScreenEvent>()
 
-
-    private val _navigationEvent = MutableSharedFlow<String>()
-    val navigationEvent = _navigationEvent.asSharedFlow()
 
     init{
         loadFromDataStore()
         observeEvents()
     }
 
-    fun setEvent(event: UserHomeScreenEvent) = viewModelScope.launch { events.emit(event)}
 
     private fun observeEvents() {
         viewModelScope.launch {
@@ -81,18 +85,13 @@ class UserHomeScreenViewModel @Inject constructor(
                 shortestDistance = distance
                 nearestCarWash = carWash
             }
-//            Log.d("UserHomeScreenViewModel", "Distance to shortest $shortestDistance: $distance")
         }
-
-
-
         setState {
             copy(
                 nearestCarWash = nearestCarWash,
                 distanceToNearestCarWash = shortestDistance
             )
         }
-//        Log.d("UserHomeScreenViewModel", "Nearest car wash: ${state.value.nearestCarWash} ${state.value.distanceToNearestCarWash}")
     }
 
     private fun calculateDistance(

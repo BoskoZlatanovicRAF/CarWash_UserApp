@@ -72,10 +72,12 @@ fun NavGraphBuilder.locationScreen(
 fun LocationScreen(
     selectedCarWash: CarWashLocation? = null,
     locations: List<CarWashLocation> = listOf(
-        CarWashLocation(44.837411, 20.402724, "Car Wash 1"),
-        CarWashLocation(44.82414368294484, 20.39677149927324, "Car Wash 2"),
-        CarWashLocation(44.805052, 20.462605, "WindowsWash"), // vidljiva perionica
-
+        CarWashLocation(44.837411, 20.402724, "NBG Wash 1"),
+        CarWashLocation(44.82414368294484, 20.39677149927324, "NBG Wash 2"),
+        CarWashLocation(44.800371, 20.456867, "WindowsWash"), // vidljiva perionica
+        CarWashLocation(44.792307, 20.491119, "Vracar Wash"),
+        CarWashLocation(44.774992, 20.476667, "Vozdovac Wash"),
+        CarWashLocation(44.778358, 20.415154, "Banovo Brdo Wash")
     )
 ) {
     val hiddenPoint = Point(44.806530, 20.464254) // nevidljiva perionica
@@ -176,36 +178,35 @@ fun LocationScreen(
 
     // Iscrtaj rutu od trenutne lokacije do selektovane perionice
     LaunchedEffect(currentLocation, selectedCarWash) {
-//        Log.d("LocationScreen", "LaunchedEffect triggered")
-//        Log.d("LocationScreen", "Current Location: $currentLocation")
-//        Log.d("LocationScreen", "Selected Car Wash: $selectedCarWash")
-
         if (currentLocation != null && selectedCarWash != null) {
-            Log.d(
-                "LocationScreen",
-                "Drawing route from ${currentLocation!!.latitude},${currentLocation!!.longitude} to ${selectedCarWash.latitude},${selectedCarWash.longitude}"
-            )
             mapView?.map?.let { map ->
                 polylineCollection.value?.apply {
-                    // Clear existing polylines
+                    // Brisanje postojece rute
                     clear()
 
-                    // Create and add the polyline
-                    val routePoints = listOf(
+                    val routeBetweenLiveLocation_Hidden = listOf(
                         Point(currentLocation!!.latitude, currentLocation!!.longitude),
+                        hiddenPoint
+                    )
+
+                    // Draw route with your theme color
+                    addPolyline(Polyline(routeBetweenLiveLocation_Hidden)).apply {
+                        setStrokeColor(android.graphics.Color.argb(255, 0, 0, 255))
+                        strokeWidth = 2f
+                    }
+
+                    val routeBetweenHidden_Selected = listOf(
+                        hiddenPoint,
                         Point(selectedCarWash.latitude, selectedCarWash.longitude)
                     )
 
-                    Log.d("LocationScreen", "Adding polyline with points: $routePoints")
-
-                    // Draw route with your theme color
-                    addPolyline(Polyline(routePoints)).apply {
-                        setStrokeColor(android.graphics.Color.argb(255, 0, 0, 255)) // Your orange theme
+                    addPolyline(Polyline(routeBetweenHidden_Selected)).apply {
+                        setStrokeColor(android.graphics.Color.argb(255, 0,0, 255))
                         strokeWidth = 2f
                     }
 
                     // Adjust camera to show both points
-                    val boundingBox = BoundingBoxHelper.fromPoints(routePoints)
+                    val boundingBox = BoundingBoxHelper.fromPoints(routeBetweenHidden_Selected)
                     map.move(
                         CameraPosition(boundingBox.northEast, 12.0f, 0.0f, 0.0f),
                         Animation(Animation.Type.SMOOTH, 1.0f),
@@ -216,15 +217,12 @@ fun LocationScreen(
         }
     }
 
-//    Log.d("LocationScreen", "Current location: ${currentLocation?.latitude} ; ${currentLocation?.longitude}" )
-
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView(
             factory = { context ->
                 MapView(context).apply {
                     mapView = this
 
-                    // Initialize MapObjectCollections
                     markerCollection.value = map.mapObjects.addCollection()
                     polylineCollection.value = map.mapObjects.addCollection()
 
@@ -242,7 +240,6 @@ fun LocationScreen(
                     map.isScrollGesturesEnabled = true
                     map.isTiltGesturesEnabled = true
 
-                    // Add initial markers
                     locations.forEach { location ->
                         markerCollection.value?.addPlacemark(
                             Point(location.latitude, location.longitude)
