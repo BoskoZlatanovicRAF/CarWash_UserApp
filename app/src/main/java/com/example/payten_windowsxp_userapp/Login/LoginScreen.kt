@@ -31,8 +31,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -140,7 +144,8 @@ onUserClick: (String) -> Unit
                 loginInput(
                     value = password,
                     onValueChange = { password = it },
-                    label = "Password"
+                    label = "Password",
+                    isPassword = true
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
@@ -188,7 +193,8 @@ fun loginInput(
 value: String,
 onValueChange: (String) -> Unit,
 label: String,
-modifier: Modifier = Modifier
+modifier: Modifier = Modifier,
+isPassword: Boolean = false
 ) {
     Column(
         modifier = modifier
@@ -210,8 +216,17 @@ modifier: Modifier = Modifier
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.Black
             ),
-            textStyle = poppinsRegular.copy(fontSize = 16.sp) // Prilagođeni font za unos
+            textStyle = poppinsRegular.copy(fontSize = 16.sp), // Prilagođeni font za unos
+            visualTransformation = if (isPassword) CustomPasswordVisualTransformation() else VisualTransformation.None // Dodaj transformaciju
         )
+    }
+}
+
+class CustomPasswordVisualTransformation : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText {
+        val mask = "●" // Simbol koji će se prikazivati
+        val maskedText = AnnotatedString(mask.repeat(text.length))
+        return TransformedText(maskedText, OffsetMapping.Identity)
     }
 }
 

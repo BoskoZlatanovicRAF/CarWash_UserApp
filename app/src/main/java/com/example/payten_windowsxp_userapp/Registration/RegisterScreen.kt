@@ -42,12 +42,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.example.payten_windowsxp_userapp.Login.CustomPasswordVisualTransformation
 import com.example.payten_windowsxp_userapp.R
 import com.example.payten_windowsxp_userapp.ui.theme.poppinsBold
 import com.example.payten_windowsxp_userapp.ui.theme.poppinsRegular
@@ -170,7 +172,8 @@ fun RegisterScreen(
                         registrationInput(
                             value = password,
                             onValueChange = { password = it },
-                            label = "Password"
+                            label = "Password",
+                            isPassword = true
                         )
                     }
                     Spacer(modifier = Modifier.height(36.dp))
@@ -206,7 +209,8 @@ fun registrationInput(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isPassword: Boolean = false
 ) {
     Column {
         OutlinedTextField(
@@ -226,7 +230,8 @@ fun registrationInput(
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
-            textStyle = poppinsRegular.copy(fontSize = 16.sp) // Prilagođeni font za unos
+            textStyle = poppinsRegular.copy(fontSize = 16.sp),
+            visualTransformation = if (isPassword) CustomPasswordVisualTransformation() else VisualTransformation.None // Dodaj transformaciju// Prilagođeni font za unos
         )
     }
 }
