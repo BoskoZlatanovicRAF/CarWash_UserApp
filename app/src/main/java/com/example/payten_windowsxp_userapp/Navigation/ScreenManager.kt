@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.compose.NavHost
@@ -16,13 +18,16 @@ import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.EditLocalScr
 import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.localScreen
 import com.example.payten_windowsxp_userapp.Users.Admin.adminHomeScreen
 import com.example.payten_windowsxp_userapp.Users.user.QR.generateQRScreen
+import com.example.payten_windowsxp_userapp.Users.user.locationScreen.CarWashLocation
 import com.example.payten_windowsxp_userapp.Users.user.locationScreen.locationScreen
 import com.example.payten_windowsxp_userapp.Users.user.profile.userProfileScreen
 import com.example.payten_windowsxp_userapp.Users.user.userhomescreen.userHomeScreen
+import java.net.URLEncoder
 
 @Composable
 fun ScreenManager() {
     val navController = rememberNavController()
+//    val selectedCarWash = remember { mutableStateOf<CarWashLocation?>(null) }
 
     Scaffold (
         bottomBar = {
@@ -35,7 +40,7 @@ fun ScreenManager() {
     ){ paddingValue ->
         NavHost(
             navController = navController,
-            startDestination = "login",
+            startDestination = "userHomeScreen",
             modifier = Modifier.padding(paddingValue)
         ) {
             logIn(
@@ -49,6 +54,22 @@ fun ScreenManager() {
                     }
                 }
             )
+
+            userHomeScreen(
+                route = "userHomeScreen",
+                onBonusClick = {
+                    navController.navigate(route = "")//dodaj rutu za points screen
+                },
+                onCarWashClick = { carWash ->
+                    val encodedName = URLEncoder.encode(carWash.name, "UTF-8")
+                    navController.navigate(route = "locationScreen/${carWash.latitude}/${carWash.longitude}/${encodedName}")
+                },
+
+                )
+
+            locationScreen(
+                route = "locationScreen",
+            )
             registerScreen(
                 route = "registerScreen",
                 onItemClick = {
@@ -58,24 +79,14 @@ fun ScreenManager() {
                     navController.navigate(route = "login")
                 }
             )
-            userHomeScreen(
-                route = "userHomeScreen",
-                onBonusClick = {
-                    navController.navigate(route = "")//dodaj rutu za points screen
-                },
-                onQrClick = {
-                    navController.navigate(route = "qrScreen")
-                }
-            )
+
             generateQRScreen(
                 route = "qrScreen",
                 onBackClick = {
                     navController.navigateUp();
                 }
             )
-            locationScreen(
-                route = "locationScreen"
-            )
+
             userProfileScreen(
                 route = "userProfile",
                 onBackClick = {

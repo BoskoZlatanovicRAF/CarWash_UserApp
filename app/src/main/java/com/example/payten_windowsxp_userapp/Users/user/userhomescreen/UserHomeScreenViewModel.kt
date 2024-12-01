@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
@@ -31,11 +32,15 @@ class UserHomeScreenViewModel @Inject constructor(
     private val carWashLocations = listOf(
         CarWashLocation(44.837411, 20.402724, "Car Wash 1"),
         CarWashLocation(44.82414368294484, 20.39677149927324, "Car Wash 2"),
-        CarWashLocation(44.79, 20.36, "PERIONICA 3")
+        CarWashLocation(44.805052, 20.462605, "WindowsWash"), // vidljiva perionica
     )
 
     private fun setState(reducer: UserHomeScreenState.() -> UserHomeScreenState) = _state.update(reducer)
     private val events = MutableSharedFlow<UserHomeScreenEvent>()
+
+
+    private val _navigationEvent = MutableSharedFlow<String>()
+    val navigationEvent = _navigationEvent.asSharedFlow()
 
     init{
         loadFromDataStore()
@@ -44,19 +49,19 @@ class UserHomeScreenViewModel @Inject constructor(
 
     fun setEvent(event: UserHomeScreenEvent) = viewModelScope.launch { events.emit(event)}
 
-    fun updateCurrentLocation(location: Location) {
-        viewModelScope.launch {
-            setEvent(UserHomeScreenContract.UserHomeScreenEvent.UpdateCurrentLocation(location.latitude, location.longitude))
-        }
-    }
-
     private fun observeEvents() {
         viewModelScope.launch {
             events.collectLatest { event ->
                 when (event) {
                     is UserHomeScreenEvent.UpdateCurrentLocation -> {
                         updateNearestCarWash(event.latitude, event.longitude)
-                        Log.d("UserHomeScreenViewModel", "Current location updated ${event.latitude}, ${event.longitude}")
+                    }
+                    is UserHomeScreenEvent.NavigateToCarWash -> {
+                        // Kreiramo URI za navigaciju sa trenutnom lokacijom i destinacijom
+                        val currentLocation = state.value.nearestCarWash?.let { carWash ->
+                            "locationScreen/${event.carWash.latitude}/${event.carWash.longitude}"
+                        } ?: "locationScreen"
+                        _navigationEvent.emit(currentLocation)
                     }
                 }
             }
@@ -76,7 +81,7 @@ class UserHomeScreenViewModel @Inject constructor(
                 shortestDistance = distance
                 nearestCarWash = carWash
             }
-            Log.d("UserHomeScreenViewModel", "Distance to shortest $shortestDistance: $distance")
+//            Log.d("UserHomeScreenViewModel", "Distance to shortest $shortestDistance: $distance")
         }
 
 
@@ -87,7 +92,7 @@ class UserHomeScreenViewModel @Inject constructor(
                 distanceToNearestCarWash = shortestDistance
             )
         }
-        Log.d("UserHomeScreenViewModel", "Nearest car wash: ${state.value.nearestCarWash} ${state.value.distanceToNearestCarWash}")
+//        Log.d("UserHomeScreenViewModel", "Nearest car wash: ${state.value.nearestCarWash} ${state.value.distanceToNearestCarWash}")
     }
 
     private fun calculateDistance(

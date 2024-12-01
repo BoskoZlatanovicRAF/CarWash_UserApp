@@ -19,5 +19,7 @@ interface UserHomeScreenContract {
 
     sealed class UserHomeScreenEvent {
         data class UpdateCurrentLocation(val latitude: Double, val longitude: Double) : UserHomeScreenEvent()
+        data class NavigateToCarWash(val carWash: CarWashLocation) : UserHomeScreenEvent()
+
     }
 }

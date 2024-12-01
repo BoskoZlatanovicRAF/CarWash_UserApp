@@ -44,6 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.payten_windowsxp_userapp.R
+import com.example.payten_windowsxp_userapp.Users.user.locationScreen.CarWashLocation
 import com.example.payten_windowsxp_userapp.ui.theme.poppinsBold
 import com.example.payten_windowsxp_userapp.ui.theme.poppinsMedium
 import com.example.payten_windowsxp_userapp.ui.theme.poppinsRegular
@@ -56,25 +57,31 @@ import com.google.android.gms.location.Priority
 fun NavGraphBuilder.userHomeScreen(
     route: String,
     onBonusClick: () -> Unit,
-    onQrClick: () -> Unit,
+    onCarWashClick: (CarWashLocation) -> Unit  // Dodajemo novi callback
 ) = composable(
     route = route,
 ) { navBackStackEntry ->
+    val userHomeScreenViewModel: UserHomeScreenViewModel = hiltViewModel(navBackStackEntry)
+    val state = userHomeScreenViewModel.state.collectAsState()
     UserHomeScreen(
+        state = state.value,
+        eventPublisher = {
+            userHomeScreenViewModel.setEvent(it)
+        },
         onBonusClick = onBonusClick,
-        onQrClick = onQrClick
+        onCarWashClick = onCarWashClick  // Prosleđujemo callback
     )
 }
 
 
 @Composable
 fun UserHomeScreen(
+    state: UserHomeScreenContract.UserHomeScreenState,
+    eventPublisher: (uiEvent: UserHomeScreenContract.UserHomeScreenEvent) -> Unit,
     onBonusClick: () -> Unit,
-    onQrClick: () -> Unit
+    onCarWashClick: (CarWashLocation) -> Unit,
 ) {
     val context = LocalContext.current
-    val userHomeScreenViewModel: UserHomeScreenViewModel = hiltViewModel()
-    val state by userHomeScreenViewModel.state.collectAsState()
 
     var hasLocationPermission by remember { mutableStateOf(false) }
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
@@ -107,12 +114,7 @@ fun UserHomeScreen(
                     override fun onLocationResult(locationResult: LocationResult) {
                         val location = locationResult.lastLocation
                         location?.let {
-                            userHomeScreenViewModel.setEvent(
-                                UserHomeScreenContract.UserHomeScreenEvent.UpdateCurrentLocation(
-                                    it.latitude,
-                                    it.longitude
-                                )
-                            )
+                            eventPublisher(UserHomeScreenContract.UserHomeScreenEvent.UpdateCurrentLocation(location.latitude, location.longitude))
                         }
                     }
                 }
@@ -205,16 +207,21 @@ fun UserHomeScreen(
                     )
                 }
 
-                // Nearest Car Wash Section
+                // NAJBLIZA PERIONICA
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color(0xFF333333), shape = MaterialTheme.shapes.medium)
                         .padding(16.dp)
+                        .clickable {
+                            state.nearestCarWash?.let { carWash ->
+                                onCarWashClick(carWash)
+                            }
+                        }
                 ) {
-                    Log.d("UserHomeScreen", "Nearest car wash: ${state.nearestCarWash}")
+//                    Log.d("UserHomeScreen", "Nearest car wash: ${state.nearestCarWash}")
                     state.nearestCarWash?.let { carWash ->
-                        Log.d("UserHomeScreen", "Nearest car wash: ${carWash.name}")
+//                        Log.d("UserHomeScreen", "Nearest car wash: ${carWash.name}")
                         Text(
                             text = "Nearest car wash station",
                             style = poppinsBold.copy(fontSize = MaterialTheme.typography.titleMedium.fontSize),
