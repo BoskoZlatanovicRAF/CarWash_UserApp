@@ -55,7 +55,8 @@ class GenerateQRViewModel @Inject constructor(
                     userId = authData.id,
                     membership = "Gold", // ili dobijeno iz podataka
                     discount = 0.1, // ili dobijeno iz podataka,
-                    firstName = authData.firstname
+                    firstName = authData.firstname,
+                    time = authData.time
                 )
                 setState {
                     copy(loading = false,
@@ -70,9 +71,11 @@ class GenerateQRViewModel @Inject constructor(
         }
     }
 
-    private fun generateQrCode(userId: Long, membership: String, discount: Double, firstName: String): Bitmap? {
+    private fun generateQrCode(userId: Long, membership: String, discount: Double, firstName: String, time: String): Bitmap? {
         return try {
-            val qrContent = "USER_ID:$userId;MEMBERSHIP:$membership;DISCOUNT:$discount;FIRST_NAME:$firstName"
+            val splitTime = time.split(":")
+            val finalTime = splitTime[0] + "/" + splitTime[1]
+            val qrContent = "USER_ID:$userId;MEMBERSHIP:$membership;DISCOUNT:$discount;FIRST_NAME:$firstName;TIME:$finalTime"
             getQrCodeBitmap(qrContent)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -113,7 +116,8 @@ class GenerateQRViewModel @Inject constructor(
                     userId = authData.id,
                     membership = "Gold",
                     discount = 0.1,
-                    firstName = authData.firstname
+                    firstName = authData.firstname,
+                    time = authData.time
                 )
                 setState {
                     copy(

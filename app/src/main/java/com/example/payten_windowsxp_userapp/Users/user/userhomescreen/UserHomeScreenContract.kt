@@ -1,6 +1,5 @@
 package com.example.payten_windowsxp_userapp.Users.user.userhomescreen
 
-import android.location.Location
 import com.example.payten_windowsxp_userapp.Users.user.db.Transaction
 import com.example.payten_windowsxp_userapp.Users.user.locationScreen.CarWashLocation
 
@@ -19,5 +18,6 @@ interface UserHomeScreenContract {
 
     sealed class UserHomeScreenEvent {
         data class UpdateCurrentLocation(val latitude: Double, val longitude: Double) : UserHomeScreenEvent()
+        data class NavigateToCarWash(val carWash: CarWashLocation) : UserHomeScreenEvent()
     }
 }
