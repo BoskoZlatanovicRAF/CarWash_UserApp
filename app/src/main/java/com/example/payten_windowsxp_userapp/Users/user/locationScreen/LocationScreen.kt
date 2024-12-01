@@ -72,9 +72,9 @@ fun NavGraphBuilder.locationScreen(
 fun LocationScreen(
     selectedCarWash: CarWashLocation? = null,
     locations: List<CarWashLocation> = listOf(
-        CarWashLocation(44.837411, 20.402724, "NBG Wash 1"),
-        CarWashLocation(44.82414368294484, 20.39677149927324, "NBG Wash 2"),
-        CarWashLocation(44.800371, 20.456867, "WindowsWash"), // vidljiva perionica
+        CarWashLocation(44.837411, 20.402724, "Novi Beograd"),
+        CarWashLocation(44.82414368294484, 20.39677149927324, "Stara Pazova "),
+        CarWashLocation(44.800371, 20.456867, "Stari Grad"), // vidljiva perionica
         CarWashLocation(44.792307, 20.491119, "Vracar Wash"),
         CarWashLocation(44.774992, 20.476667, "Vozdovac Wash"),
         CarWashLocation(44.778358, 20.415154, "Banovo Brdo Wash")
@@ -158,10 +158,6 @@ fun LocationScreen(
 
     // Move camera to current location
     LaunchedEffect(currentLocation) {
-        Log.d(
-            "LocationScreen",
-            "Location update received: ${currentLocation?.latitude}, ${currentLocation?.longitude}"
-        )
         currentLocation?.let { location ->
             mapView?.map?.move(
                 CameraPosition(
@@ -274,6 +270,7 @@ fun LocationScreen(
                         Point(location.latitude, location.longitude)
                     ).apply {
                         setIcon(ImageProvider.fromAsset(context, "current_location_marker.png"))
+
                     }
                 }
             }
