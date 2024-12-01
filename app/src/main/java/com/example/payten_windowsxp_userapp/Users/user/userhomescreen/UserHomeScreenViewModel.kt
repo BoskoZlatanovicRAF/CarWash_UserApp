@@ -1,17 +1,23 @@
 package com.example.payten_windowsxp_userapp.Users.user.userhomescreen
 
+import android.location.Location
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.payten_windowsxp_userapp.Users.repository.TransactionRepository
+import com.example.payten_windowsxp_userapp.Users.user.locationScreen.CarWashLocation
 import com.example.payten_windowsxp_userapp.Users.user.userhomescreen.UserHomeScreenContract.UserHomeScreenEvent
 import com.example.payten_windowsxp_userapp.Users.user.userhomescreen.UserHomeScreenContract.UserHomeScreenState
 import com.example.payten_windowsxp_userapp.auth.AuthStore
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,13 +28,75 @@ class UserHomeScreenViewModel @Inject constructor(
     private val _state = MutableStateFlow(UserHomeScreenState())
     val state = _state.asStateFlow()
 
+    private val carWashLocations = listOf(
+        CarWashLocation(44.837411, 20.402724, "Car Wash 1"),
+        CarWashLocation(44.82414368294484, 20.39677149927324, "Car Wash 2"),
+        CarWashLocation(44.79, 20.36, "PERIONICA 3")
+    )
+
     private fun setState(reducer: UserHomeScreenState.() -> UserHomeScreenState) = _state.update(reducer)
     private val events = MutableSharedFlow<UserHomeScreenEvent>()
 
-    fun setEvent(event: UserHomeScreenEvent) = viewModelScope.launch { events.emit(event)}
-
     init{
         loadFromDataStore()
+        observeEvents()
+    }
+
+    fun setEvent(event: UserHomeScreenEvent) = viewModelScope.launch { events.emit(event)}
+
+    fun updateCurrentLocation(location: Location) {
+        viewModelScope.launch {
+            setEvent(UserHomeScreenContract.UserHomeScreenEvent.UpdateCurrentLocation(location.latitude, location.longitude))
+        }
+    }
+
+    private fun observeEvents() {
+        viewModelScope.launch {
+            events.collectLatest { event ->
+                when (event) {
+                    is UserHomeScreenEvent.UpdateCurrentLocation -> {
+                        updateNearestCarWash(event.latitude, event.longitude)
+                        Log.d("UserHomeScreenViewModel", "Current location updated ${event.latitude}, ${event.longitude}")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateNearestCarWash(currentLat: Double, currentLon: Double) {
+        var nearestCarWash: CarWashLocation? = null
+        var shortestDistance = Float.MAX_VALUE
+
+        carWashLocations.forEach { carWash ->
+            val distance = calculateDistance(
+                currentLat, currentLon,
+                carWash.latitude, carWash.longitude
+            )
+            if (distance < shortestDistance) {
+                shortestDistance = distance
+                nearestCarWash = carWash
+            }
+            Log.d("UserHomeScreenViewModel", "Distance to shortest $shortestDistance: $distance")
+        }
+
+
+
+        setState {
+            copy(
+                nearestCarWash = nearestCarWash,
+                distanceToNearestCarWash = shortestDistance
+            )
+        }
+        Log.d("UserHomeScreenViewModel", "Nearest car wash: ${state.value.nearestCarWash} ${state.value.distanceToNearestCarWash}")
+    }
+
+    private fun calculateDistance(
+        lat1: Double, lon1: Double,
+        lat2: Double, lon2: Double
+    ): Float {
+        val results = FloatArray(1)
+        Location.distanceBetween(lat1, lon1, lat2, lon2, results)
+        return results[0]
     }
 
     private fun loadFromDataStore(){

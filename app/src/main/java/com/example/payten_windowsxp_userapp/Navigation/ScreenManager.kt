@@ -102,7 +102,6 @@ fun ScreenManager() {
             )
         }
     }
-
 }
 
 inline val SavedStateHandle.localId: String
