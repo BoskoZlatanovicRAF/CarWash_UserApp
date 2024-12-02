@@ -21,6 +21,8 @@ import com.example.payten_windowsxp_userapp.Users.user.Notifications.notificatio
 import com.example.payten_windowsxp_userapp.Users.user.QR.generateQRScreen
 import com.example.payten_windowsxp_userapp.Users.user.locationScreen.CarWashLocation
 import com.example.payten_windowsxp_userapp.Users.user.locationScreen.locationScreen
+import com.example.payten_windowsxp_userapp.Users.user.locationScreen.locationScreenDetails.locationDetailsScreen
+import com.example.payten_windowsxp_userapp.Users.user.membership.membershipDetailsScreen
 import com.example.payten_windowsxp_userapp.Users.user.profile.userProfileScreen
 import com.example.payten_windowsxp_userapp.Users.user.userhomescreen.userHomeScreen
 import java.net.URLEncoder
@@ -59,17 +61,33 @@ fun ScreenManager() {
             userHomeScreen(
                 route = "userHomeScreen",
                 onBonusClick = {
-                    navController.navigate(route = "")//dodaj rutu za points screen
+                    navController.navigate(route = "userHomeScreen/membershipDetailsScreen")//dodaj rutu za points screen
                 },
                 onCarWashClick = { carWash ->
                     val encodedName = URLEncoder.encode(carWash.name, "UTF-8")
                     navController.navigate(route = "locationScreen/${carWash.latitude}/${carWash.longitude}/${encodedName}")
                 },
+            )
 
-                )
+            membershipDetailsScreen(
+                route = "userHomeScreen/membershipDetailsScreen",
+                onBackClick = {
+                    navController.navigateUp()
+                }
+            )
 
             locationScreen(
                 route = "locationScreen",
+                onPictureClick = {
+                    navController.navigate(route = "locationScreen/locationDetailsScreen")
+                },
+            )
+
+            locationDetailsScreen(
+                route = "locationScreen/locationDetailsScreen",
+                onBackClick = {
+                    navController.navigateUp()
+                }
             )
             registerScreen(
                 route = "registerScreen",
