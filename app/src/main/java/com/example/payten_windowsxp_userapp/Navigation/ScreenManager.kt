@@ -40,7 +40,7 @@ fun ScreenManager() {
     ){ paddingValue ->
         NavHost(
             navController = navController,
-            startDestination = "userHomeScreen",
+            startDestination = "login",
             modifier = Modifier.padding(paddingValue)
         ) {
             logIn(
