@@ -54,7 +54,7 @@ fun BottomNavigationBar(
     ) {
         screens.forEach { screen ->
             NavigationBarItem(
-                selected = currentRoute == screen.route,
+                selected = currentRoute?.startsWith(screen.route) == true,
                 onClick = { if (currentRoute != screen.route) navController.navigate(screen.route) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color(0xFFED6825),
@@ -63,11 +63,12 @@ fun BottomNavigationBar(
                 ),
                 icon = {
                     when (screen) {
-                        is Screen.VectorScreen -> Icon(
-                            imageVector = if (currentRoute == screen.route) screen.selectedIcon
-                            else screen.unselectedIcon,
-                            contentDescription = screen.route
-                        )
+                        is Screen.VectorScreen ->
+                            Icon(
+                                imageVector = if (currentRoute?.startsWith(screen.route) == true) screen.selectedIcon
+                                else screen.unselectedIcon,
+                                contentDescription = screen.route
+                            )
                         is Screen.DrawableScreen -> {
                             if (screen == Screen.QR) {
                                 Box(
@@ -75,7 +76,7 @@ fun BottomNavigationBar(
                                 ) {
                                     Icon(
                                         painter = painterResource(
-                                            if (currentRoute == screen.route) screen.selectedIcon
+                                            if (currentRoute?.startsWith(screen.route) == true) screen.selectedIcon
                                             else screen.unselectedIcon
                                         ),
                                         contentDescription = screen.route,
@@ -85,7 +86,7 @@ fun BottomNavigationBar(
                             } else {
                                 Icon(
                                     painter = painterResource(
-                                        if (currentRoute == screen.route) screen.selectedIcon
+                                        if (currentRoute?.startsWith(screen.route) == true) screen.selectedIcon
                                         else screen.unselectedIcon
                                     ),
                                     contentDescription = screen.route

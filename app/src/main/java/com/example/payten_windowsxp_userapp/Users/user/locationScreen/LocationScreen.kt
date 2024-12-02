@@ -8,9 +8,13 @@ import android.location.LocationManager
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.*
@@ -18,14 +22,22 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.payten_windowsxp_userapp.R
+import com.example.payten_windowsxp_userapp.Users.user.userhomescreen.format
+import com.example.payten_windowsxp_userapp.ui.theme.poppinsBold
+import com.example.payten_windowsxp_userapp.ui.theme.poppinsMedium
+import com.example.payten_windowsxp_userapp.ui.theme.poppinsRegular
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.BoundingBox
@@ -41,10 +53,11 @@ import kotlin.math.min
 
 fun NavGraphBuilder.locationScreen(
     route: String,
+    onPictureClick: () -> Unit
 ) {
     // Ruta za bottom navigation
     composable(route = route) {
-        LocationScreen(selectedCarWash = null)
+        LocationScreen(selectedCarWash = null, onPictureClick = onPictureClick)
     }
 
     // Ruta za navigaciju iz UserHomeScreen sa parametrima
@@ -63,13 +76,15 @@ fun NavGraphBuilder.locationScreen(
         } ?: ""
 
         LocationScreen(
-            selectedCarWash = CarWashLocation(lat, lon, name)
+            selectedCarWash = CarWashLocation(lat, lon, name),
+            onPictureClick = onPictureClick
         )
     }
 }
 
 @Composable
 fun LocationScreen(
+    onPictureClick: () -> Unit,
     selectedCarWash: CarWashLocation? = null,
     locations: List<CarWashLocation> = listOf(
         CarWashLocation(44.837411, 20.402724, "Novi Beograd"),
@@ -270,7 +285,6 @@ fun LocationScreen(
                         Point(location.latitude, location.longitude)
                     ).apply {
                         setIcon(ImageProvider.fromAsset(context, "current_location_marker.png"))
-
                     }
                 }
             }
@@ -283,7 +297,7 @@ fun LocationScreen(
                 .padding(top = 16.dp, end = 16.dp)
                 .background(
                     color = Color.White.copy(alpha = 0.8f),
-                    shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp)
                 )
                 .size(48.dp)
         ) {
@@ -345,6 +359,27 @@ fun LocationScreen(
         }
     }
 
+    if(selectedCarWash == null) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Spacer(modifier = Modifier.weight(1f))
+
+            Box {
+                NearestCarWashes(
+                    currentLocation = currentLocation,
+                    carWashes = locations,
+                    onShowRouteClick = { carWash ->
+                        // Logic to show route
+                    },
+                    onPictureClick = onPictureClick
+                )
+            }
+        }
+
+    }
+
+
     DisposableEffect(Unit) {
         mapView?.onStart()
         MapKitFactory.getInstance().onStart()
@@ -353,6 +388,159 @@ fun LocationScreen(
             MapKitFactory.getInstance().onStop()
         }
     }
+}
+
+
+@Composable
+fun NearestCarWashes(
+    currentLocation: Location?,
+    carWashes: List<CarWashLocation>,
+    onShowRouteClick: (CarWashLocation) -> Unit,
+    onPictureClick: () -> Unit
+) {
+    val nearestCarWashes = currentLocation?.let {
+        findTwoNearestCarWashes(it.latitude, it.longitude, carWashes)
+    } ?: emptyList()
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(170.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        nearestCarWashes.forEachIndexed { index, carWash ->
+            CarWashCard(
+                carWash = carWash,
+                currentLocation = currentLocation,
+                onShowRouteClick = { onShowRouteClick(carWash) },
+                onPictureClick = { onPictureClick() },
+                modifier = Modifier.weight(1f),
+                imageResId = if (index == 0) R.drawable.perionica1 else R.drawable.perionica2
+            )
+        }
+    }
+}
+@Composable
+fun CarWashCard(
+    carWash: CarWashLocation,
+    currentLocation: Location?,
+    onShowRouteClick: () -> Unit,
+    onPictureClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    imageResId: Int
+) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF333333)
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable { onPictureClick() }
+        ) {
+            // Background Image
+            Image(
+                painter = painterResource(id = imageResId),
+                contentDescription = null,
+                modifier = Modifier
+                    .width(170.dp)
+                    .height(150.dp),
+                contentScale = ContentScale.Crop
+            )
+
+            // Semi-transparent black overlay
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f))
+            )
+
+            // Content
+            Column(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(12.dp)
+            ) {
+                // Car Wash Name
+                Text(
+                    text = carWash.name,
+                    style = poppinsBold.copy(fontSize = 14.sp),
+                    color = Color.White,
+                )
+
+                // Distance
+                currentLocation?.let {
+                    val distance = calculateDistance(
+                        it.latitude, it.longitude,
+                        carWash.latitude, carWash.longitude
+                    )
+                    Text(
+                        text = "${(distance / 1000).format(1)} km", // Convert meters to kilometers
+                        style = poppinsBold.copy(fontSize = 12.sp),
+                        color = Color.LightGray
+                    )
+                }
+            }
+
+            // Show Route Button
+            Button(
+                onClick = onShowRouteClick,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFED6825)
+                ),
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(2.dp)
+            ) {
+                Text(
+                    text = "Show Route",
+                    style = poppinsMedium.copy(fontSize = 12.sp),
+                    color = Color.White
+                )
+            }
+
+            // Rating
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(12.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null,
+                    tint = Color.Yellow,
+                    modifier = Modifier.size(16.dp)
+                )
+                Text(
+                    text = "5.0",
+                    style = poppinsRegular.copy(fontSize = 14.sp),
+                    color = Color.White,
+                    modifier = Modifier.padding(start = 4.dp)
+                )
+            }
+        }
+    }
+}
+
+fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Float {
+    val results = FloatArray(1)
+    Location.distanceBetween(lat1, lon1, lat2, lon2, results)
+    return results[0] // Return distance in meters
+}
+
+fun findTwoNearestCarWashes(
+    currentLat: Double,
+    currentLon: Double,
+    carWashLocations: List<CarWashLocation>
+): List<CarWashLocation> {
+    return carWashLocations.sortedBy {
+        calculateDistance(currentLat, currentLon, it.latitude, it.longitude)
+    }.take(2)
 }
 
 // Helper object to calculate bounding box from a list of points

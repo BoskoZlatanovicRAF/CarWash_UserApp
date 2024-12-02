@@ -20,6 +20,7 @@ import com.example.payten_windowsxp_userapp.Users.Admin.adminHomeScreen
 import com.example.payten_windowsxp_userapp.Users.user.QR.generateQRScreen
 import com.example.payten_windowsxp_userapp.Users.user.locationScreen.CarWashLocation
 import com.example.payten_windowsxp_userapp.Users.user.locationScreen.locationScreen
+import com.example.payten_windowsxp_userapp.Users.user.locationScreen.locationScreenDetails.locationDetailsScreen
 import com.example.payten_windowsxp_userapp.Users.user.profile.userProfileScreen
 import com.example.payten_windowsxp_userapp.Users.user.userhomescreen.userHomeScreen
 import java.net.URLEncoder
@@ -64,11 +65,20 @@ fun ScreenManager() {
                     val encodedName = URLEncoder.encode(carWash.name, "UTF-8")
                     navController.navigate(route = "locationScreen/${carWash.latitude}/${carWash.longitude}/${encodedName}")
                 },
-
-                )
+            )
 
             locationScreen(
                 route = "locationScreen",
+                onPictureClick = {
+                    navController.navigate(route = "locationScreen/locationDetailsScreen")
+                },
+            )
+
+            locationDetailsScreen(
+                route = "locationScreen/locationDetailsScreen",
+                onBackClick = {
+                    navController.navigateUp()
+                }
             )
             registerScreen(
                 route = "registerScreen",
