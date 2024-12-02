@@ -17,6 +17,7 @@ import com.example.payten_windowsxp_userapp.Registration.registerScreen
 import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.EditLocalScreen.editLocalScreen
 import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.localScreen
 import com.example.payten_windowsxp_userapp.Users.Admin.adminHomeScreen
+import com.example.payten_windowsxp_userapp.Users.user.Notifications.notificationScreen
 import com.example.payten_windowsxp_userapp.Users.user.QR.generateQRScreen
 import com.example.payten_windowsxp_userapp.Users.user.locationScreen.CarWashLocation
 import com.example.payten_windowsxp_userapp.Users.user.locationScreen.locationScreen
@@ -41,7 +42,7 @@ fun ScreenManager() {
     ){ paddingValue ->
         NavHost(
             navController = navController,
-            startDestination = "userHomeScreen",
+            startDestination = "login",
             modifier = Modifier.padding(paddingValue)
         ) {
             logIn(
@@ -103,7 +104,9 @@ fun ScreenManager() {
                     navController.navigateUp();
                 },
                 onEditClick = {
-
+                },
+                navLogOutClick = {
+                    navController.navigate(route = "login")
                 }
             )
             adminHomeScreen(
@@ -120,6 +123,12 @@ fun ScreenManager() {
             )
             editLocalScreen(
                 route = "editLocalScreen/{editLocalId}",
+            )
+            notificationScreen(
+                route = "notificationScreen",
+                onUserClick = {
+                    navController.navigateUp();
+                }
             )
         }
     }
