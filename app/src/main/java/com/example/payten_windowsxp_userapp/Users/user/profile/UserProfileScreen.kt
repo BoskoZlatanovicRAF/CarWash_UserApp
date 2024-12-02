@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -71,19 +73,27 @@ fun UserProfileScreen(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "←", // Strelica nazad
-                    style = poppinsBold.copy(fontSize = 36.sp),
-                    color = Color(0xFFED6825),
-                    modifier = Modifier
-                        .clickable { onBackClick() }
-                        .padding(end = 16.dp)
-                )
-                Text(
-                    text = "Profile",
-                    style = poppinsBold.copy(fontSize = 24.sp),
-                    color = Color.White
-                )
+                Row {
+                    Text(
+                        "<",
+                        color = Color.White,
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        style = poppinsBold,
+                        modifier = Modifier.clickable(
+                            onClick = { onBackClick() }
+                        )
+                    )
+                    Spacer(modifier = Modifier.width(9.dp))
+                    Text(
+                        "Profile",
+                        color = Color.White,
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        style = poppinsBold,
+                    )
+                }
+
             }
 
             //Spacer(modifier = Modifier.height(4.dp))
