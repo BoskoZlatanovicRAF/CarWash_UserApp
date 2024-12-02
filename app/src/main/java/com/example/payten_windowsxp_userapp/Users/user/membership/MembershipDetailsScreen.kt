@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -24,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -135,10 +138,12 @@ fun MembershipDetailsScreen(
                     progress = 0.65f,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(8.dp)
+                        .height(30.dp) // Increased height for wider appearance
                         .padding(vertical = 8.dp),
                     color = Color(0xFFED6825),
-                    trackColor = Color.Gray
+                    trackColor = Color.Gray,
+                    strokeCap = StrokeCap.Round
+
                 )
 
                 Text(
@@ -166,7 +171,7 @@ fun MembershipDetailsScreen(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             BenefitCard(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f),  // This will make each card take equal width
                 icon = R.drawable.car_tag,
                 title = "10% off",
                 subtitle = "All services"
@@ -174,10 +179,12 @@ fun MembershipDetailsScreen(
             BenefitCard(
                 modifier = Modifier.weight(1f),
                 icon = R.drawable.baseline_timer_24,
-                title = "Priority Service",
+                title = "Priority",
                 subtitle = "Skip the queue"
             )
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -191,12 +198,16 @@ fun MembershipDetailsScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         // Points History Items
-        Column(
+        LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            HistoryItem("Vozdovac", "Nov 29, 2024", "+15")
-            HistoryItem("Vracar", "Nov 29, 2024", "+45")
-            HistoryItem("Banovo Brdo", "Nov 29, 2024", "+35")
+            items(listOf(
+                Triple("Vozdovac", "Nov 29, 2024", "+15"),
+                Triple("Vracar", "Nov 29, 2024", "+45"),
+                Triple("Banovo Brdo", "Nov 29, 2024", "+35")
+            )) { (location, date, points) ->
+                HistoryItem(location, date, points)
+            }
         }
     }
 }
@@ -204,38 +215,42 @@ fun MembershipDetailsScreen(
 @Composable
 private fun BenefitCard(
     modifier: Modifier = Modifier,
-    @DrawableRes icon: Int,  // Changed to accept drawable resource ID
+    @DrawableRes icon: Int,
     title: String,
     subtitle: String
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier,  // Use the passed modifier which includes weight
         colors = CardDefaults.cardColors(containerColor = Color(0xFF333333)),
         shape = RoundedCornerShape(12.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Icon(
-                painter = painterResource(id = icon),  // Use painterResource instead of ImageVector
+                painter = painterResource(id = icon),
                 contentDescription = null,
                 tint = Color(0xFFED6825),
                 modifier = Modifier.size(24.dp)
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = title,
-                style = poppinsBold.copy(fontSize = 16.sp),
-                color = Color.White
-            )
-            Text(
-                text = subtitle,
-                style = poppinsRegular.copy(fontSize = 12.sp),
-                color = Color.Gray
-            )
+            Column {
+                Text(
+                    text = title,
+                    style = poppinsBold.copy(fontSize = 16.sp),
+                    color = Color.White
+                )
+                Text(
+                    text = subtitle,
+                    style = poppinsRegular.copy(fontSize = 12.sp),
+                    color = Color.Gray
+                )
+            }
         }
     }
 }
+
 
 @Composable
 private fun HistoryItem(
