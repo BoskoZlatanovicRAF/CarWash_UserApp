@@ -370,7 +370,44 @@ fun LocationScreen(
                     currentLocation = currentLocation,
                     carWashes = locations,
                     onShowRouteClick = { carWash ->
-                        // Logic to show route
+                        // Logic to show route )
+                        if (currentLocation != null) {
+                            mapView?.map?.let { map ->
+                                polylineCollection.value?.apply {
+                                    // Brisanje postojece rute
+                                    clear()
+
+                                    val routeBetweenLiveLocation_Hidden = listOf(
+                                        Point(currentLocation!!.latitude, currentLocation!!.longitude),
+                                        hiddenPoint
+                                    )
+
+                                    // Draw route with your theme color
+                                    addPolyline(Polyline(routeBetweenLiveLocation_Hidden)).apply {
+                                        setStrokeColor(android.graphics.Color.argb(255, 0, 0, 255))
+                                        strokeWidth = 2f
+                                    }
+
+                                    val routeBetweenHidden_Selected = listOf(
+                                        hiddenPoint,
+                                        Point(carWash.latitude, carWash.longitude)
+                                    )
+
+                                    addPolyline(Polyline(routeBetweenHidden_Selected)).apply {
+                                        setStrokeColor(android.graphics.Color.argb(255, 0,0, 255))
+                                        strokeWidth = 2f
+                                    }
+
+                                    // Adjust camera to show both points
+                                    val boundingBox = BoundingBoxHelper.fromPoints(routeBetweenHidden_Selected)
+                                    map.move(
+                                        CameraPosition(boundingBox.northEast, 12.0f, 0.0f, 0.0f),
+                                        Animation(Animation.Type.SMOOTH, 1.0f),
+                                        null
+                                    )
+                                }
+                            }
+                        }
                     },
                     onPictureClick = onPictureClick
                 )
