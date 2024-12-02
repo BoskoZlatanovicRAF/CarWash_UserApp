@@ -80,8 +80,7 @@ onUserClick: (String) -> Unit
     val focusManager = LocalFocusManager.current
     Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .clickable { focusManager.clearFocus() },
+            .fillMaxSize(),
         containerColor = Color(0xFF212121),
         content = { paddingValues ->
             var password by remember { mutableStateOf("") }

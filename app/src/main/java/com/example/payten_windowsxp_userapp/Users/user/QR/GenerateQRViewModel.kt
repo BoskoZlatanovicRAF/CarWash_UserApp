@@ -109,7 +109,7 @@ class GenerateQRViewModel @Inject constructor(
 
     private fun regenerateQrCode() {
         viewModelScope.launch {
-            setState { copy(loading = true, qrExpired = false, timeRemaining = 10) } // Resetuj stanje
+            setState { copy(loading = true, qrExpired = false, timeRemaining = state.value.timeRemaining) } // Resetuj stanje
             val authData = authStore.authData.value
             if (authData.firstname.isNotEmpty()) {
                 val qrCode = generateQrCode(
