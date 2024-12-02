@@ -32,7 +32,7 @@ sealed interface Screen {
     object QR : DrawableScreen("qrScreen",
         R.drawable.baseline_qr_code_scanner_24,
         R.drawable.baseline_qr_code_scanner_white)
-    object Notifications : VectorScreen("notifications", Icons.Outlined.Notifications, Icons.Rounded.Notifications)
+    object Notifications : VectorScreen("notificationScreen", Icons.Outlined.Notifications, Icons.Rounded.Notifications)
     object Profile : VectorScreen("userProfile", Icons.Outlined.Person, Icons.Rounded.Person)
 
     // Admin Screens

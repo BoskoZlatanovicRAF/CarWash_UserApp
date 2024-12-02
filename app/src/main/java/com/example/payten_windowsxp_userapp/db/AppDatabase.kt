@@ -5,6 +5,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.db.Local
 import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.db.Token
+import com.example.payten_windowsxp_userapp.Users.user.Notifications.db.Notification
+import com.example.payten_windowsxp_userapp.Users.user.Notifications.db.NotificationDao
 import com.example.payten_windowsxp_userapp.Users.User
 import com.example.payten_windowsxp_userapp.Users.db.LocalDao
 import com.example.payten_windowsxp_userapp.Users.db.TokenDao
@@ -18,8 +20,9 @@ import com.example.payten_windowsxp_userapp.Users.user.db.TransactionDao
         Local::class,
         Token::class,
         Transaction::class,
+        Notification::class
     ],
-    version = 12,
+    version = 14,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -28,4 +31,5 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun localDao() : LocalDao
     abstract fun tokenDao() : TokenDao
     abstract fun transactionDao() : TransactionDao
+    abstract fun notificationDao() : NotificationDao
 }
