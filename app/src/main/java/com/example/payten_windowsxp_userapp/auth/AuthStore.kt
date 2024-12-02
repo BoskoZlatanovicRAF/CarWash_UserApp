@@ -2,6 +2,7 @@ package com.example.payten_windowsxp_userapp.auth
 
 import android.util.Log
 import androidx.datastore.core.DataStore
+import com.example.payten_windowsxp_userapp.Users.RoleEnum
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
@@ -31,6 +32,20 @@ class AuthStore @Inject constructor(
         }
 
         Log.d("AuthStore", "Data updated: $newAuthData")
+    }
+    //clear
+    suspend fun clearAuthData() {
+        persistence.updateData { oldAuthData ->
+            AuthData(
+                id = 0,
+                firstname = "",
+                lastName = "",
+                email = "",
+                bonusPoints = 0,
+                time = "",
+                role = RoleEnum.USER
+            )
+        }
     }
 
     suspend fun getAuthData(): AuthData {

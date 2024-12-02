@@ -94,7 +94,9 @@ fun ScreenManager() {
                     navController.navigateUp();
                 },
                 onEditClick = {
-
+                },
+                navLogOutClick = {
+                    navController.navigate(route = "login")
                 }
             )
             adminHomeScreen(
