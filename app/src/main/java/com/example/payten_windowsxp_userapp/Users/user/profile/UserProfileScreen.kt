@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -29,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.example.payten_windowsxp_userapp.Login.LoginScreenContract
 import com.example.payten_windowsxp_userapp.R
 import com.example.payten_windowsxp_userapp.Users.user.userhomescreen.UserHomeScreen
 import com.example.payten_windowsxp_userapp.Users.user.userhomescreen.UserHomeScreenViewModel
@@ -39,6 +42,7 @@ fun NavGraphBuilder.userProfileScreen(
     route: String,
     onEditClick: () -> Unit,
     onBackClick: () -> Unit,
+    navLogOutClick: () -> Unit
 ) = composable(
     route = route,
 ) { navBackStackEntry ->
@@ -48,7 +52,11 @@ fun NavGraphBuilder.userProfileScreen(
     UserProfileScreen(
         state = state.value,
         onEditClick = onEditClick,
-        onBackClick = onBackClick
+        onBackClick = onBackClick,
+        eventPublisher = {
+            userProfileViewModel.setEvent(it)
+        },
+        navLogOutClick = navLogOutClick
     )
 }
 
@@ -56,110 +64,131 @@ fun NavGraphBuilder.userProfileScreen(
 fun UserProfileScreen(
     state: UserProfileContract.UserProfileState,
     onEditClick: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    navLogOutClick: () -> Unit,
+    eventPublisher: (UserProfileContract.UserProfileScreenUiEvent) -> Unit
 ) {
-    Scaffold(
-        containerColor = Color(0xFF212121) // Tamno siva pozadina
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            // Gornji deo za naslov i povratak
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row {
-                    Text(
-                        "<",
-                        color = Color.White,
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        style = poppinsBold,
-                        modifier = Modifier.clickable(
-                            onClick = { onBackClick() }
-                        )
-                    )
-                    Spacer(modifier = Modifier.width(9.dp))
-                    Text(
-                        "Profile",
-                        color = Color.White,
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        style = poppinsBold,
-                    )
-                }
-
-            }
-
-            //Spacer(modifier = Modifier.height(4.dp))
-
-            // Ikonica profila
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_account_circle_24),
-                    contentDescription = "Profile Icon",
-                    tint = Color(0xFFED6825),
-                    modifier = Modifier.size(150.dp)
-                )
-            }
-
-
-            // Informacije o korisniku
+    if(state.loggedOut){
+        navLogOutClick()
+    }else {
+        Scaffold(
+            containerColor = Color(0xFF212121) // Tamno siva pozadina
+        ) { innerPadding ->
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        Color(0xFF333333), // Siva pozadina
-                        shape = MaterialTheme.shapes.medium
-                    )
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                // Ikonica za uređivanje
+                // Gornji deo za naslov i povratak
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    ProfileField(
-                        label = "Full Name",
-                        value = "${state.firstName} ${state.lastName}",
-                        modifier = Modifier.weight(1f) // Ovo omogućava da tekst zauzme što više prostora
-                    )
+                    Row {
+                        Text(
+                            "<",
+                            color = Color.White,
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold,
+                            style = poppinsBold,
+                            modifier = Modifier.clickable(
+                                onClick = { onBackClick() }
+                            )
+                        )
+                        Spacer(modifier = Modifier.width(9.dp))
+                        Text(
+                            "Profile",
+                            color = Color.White,
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold,
+                            style = poppinsBold,
+                        )
+                    }
+
+                }
+
+                //Spacer(modifier = Modifier.height(4.dp))
+
+                // Ikonica profila
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.baseline_edit_24),
-                        contentDescription = "Edit Profile",
+                        painter = painterResource(id = R.drawable.baseline_account_circle_24),
+                        contentDescription = "Profile Icon",
                         tint = Color(0xFFED6825),
-                        modifier = Modifier
-                            .size(32.dp)
-                            .clickable { onEditClick() }
+                        modifier = Modifier.size(150.dp)
                     )
                 }
-                ProfileField(
-                    label = "Email",
-                    value = state.email
-                )
-                ProfileField(
-                    label = "Date of Birth",
-                    value = state.dateOfBirth
-                )
-                ProfileField(
-                    label = "Phone",
-                    value = state.phoneNumber
-                )
-                ProfileField(
-                    label = "Password",
-                    value = "●".repeat(state.password.length)
-                )
+
+
+                // Informacije o korisniku
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            Color(0xFF333333), // Siva pozadina
+                            shape = MaterialTheme.shapes.medium
+                        )
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    // Ikonica za uređivanje
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        ProfileField(
+                            label = "Full Name",
+                            value = "${state.firstName} ${state.lastName}",
+                            modifier = Modifier.weight(1f) // Ovo omogućava da tekst zauzme što više prostora
+                        )
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_edit_24),
+                            contentDescription = "Edit Profile",
+                            tint = Color(0xFFED6825),
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clickable { onEditClick() }
+                        )
+                    }
+                    ProfileField(
+                        label = "Email",
+                        value = state.email
+                    )
+                    ProfileField(
+                        label = "Date of Birth",
+                        value = state.dateOfBirth
+                    )
+                    ProfileField(
+                        label = "Phone",
+                        value = state.phoneNumber
+                    )
+                    ProfileField(
+                        label = "Password",
+                        value = "●".repeat(state.password.length)
+                    )
+                }
+                Button(
+                    onClick = { eventPublisher(UserProfileContract.UserProfileScreenUiEvent.logOutClick()) },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFED6825),
+                        contentColor = Color.White
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        "Log Out",
+                        fontSize = 22.sp,
+                        style = poppinsBold, // Prilagođeni font
+                        modifier = Modifier.padding(6.dp)
+                    )
+                }
             }
         }
     }
