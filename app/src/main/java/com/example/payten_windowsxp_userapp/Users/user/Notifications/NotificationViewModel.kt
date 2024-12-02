@@ -33,7 +33,7 @@ class NotificationViewModel @Inject constructor(
 
     init {
         insertNotification()
-        loadNotifications()
+
     }
 
     private fun loadNotifications() {
@@ -92,6 +92,7 @@ class NotificationViewModel @Inject constructor(
                     )
                 )
             }
+            loadNotifications()
         }
     }
 

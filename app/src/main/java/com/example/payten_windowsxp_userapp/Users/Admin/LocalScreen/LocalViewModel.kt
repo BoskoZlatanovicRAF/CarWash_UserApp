@@ -33,8 +33,7 @@ class LocalViewModel @Inject constructor(
 
     init {
         insertTokens()
-        loadTokens()
-        loadLocal()
+
     }
 
     private fun loadTokens() {
@@ -84,6 +83,8 @@ class LocalViewModel @Inject constructor(
                 )
                 repositoryToken.insertAllTokens(listOf(token1, token2, token3, token4))
             }
+            loadTokens()
+            loadLocal()
         }
     }
 

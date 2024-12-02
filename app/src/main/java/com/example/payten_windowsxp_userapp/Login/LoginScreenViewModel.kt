@@ -95,15 +95,15 @@ class LoginScreenViewModel @Inject constructor(
             if (userRepository.getUserCount() < 2) {
                 val user = User(
                     id = 2,
-                    firstname = "User",
-                    lastName = "User",
+                    firstname = "Dusan",
+                    lastName = "Pajic",
                     email = "dusan@pajic.com",
                     phoneNumber = "123456789",
                     birthdate = "01-01-2000",
                     password = "user",
                     role = RoleEnum.USER,
                     bonusPoints = 0,
-                    time = "00:00"
+                    time = "5:10"
                 )
                 userRepository.insertUser(user)
             }
