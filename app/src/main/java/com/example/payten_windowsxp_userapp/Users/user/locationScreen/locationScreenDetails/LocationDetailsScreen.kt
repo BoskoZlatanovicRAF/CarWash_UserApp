@@ -3,6 +3,7 @@ package com.example.payten_windowsxp_userapp.Users.user.locationScreen.locationS
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,6 +40,7 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,27 +70,26 @@ fun LocationDetailsScreen(
             .background(Color(0xFF212121))
             .padding(16.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = onBackClick) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back",
-                    tint = Color(0xFFED6825)
-                )
-            }
+        Row {
             Text(
-                text = "Location Details",
-                style = poppinsBold.copy(fontSize = 24.sp),
+                "<",
                 color = Color.White,
-                modifier = Modifier.padding(start = 8.dp)
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                style = poppinsBold,
+                modifier = Modifier.clickable(
+                    onClick = { onBackClick() }
+                )
+            )
+            Spacer(modifier = Modifier.width(9.dp))
+            Text(
+                "Location Details",
+                color = Color.White,
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                style = poppinsBold,
             )
         }
-
         Spacer(modifier = Modifier.height(16.dp))
         Card(
             shape = RoundedCornerShape(16.dp),

@@ -70,29 +70,26 @@ fun LocalScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
+                    Row {
                         Text(
-                            text = "Local details",
-                            style = poppinsBold.copy(fontSize = 36.sp),
-                            color = Color.LightGray,
-                            modifier = Modifier
-                                .padding(end = 16.dp),
+                            "<",
+                            color = Color.White,
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold,
+                            style = poppinsBold,
+                            modifier = Modifier.clickable(
+                                onClick = { onBackClick() }
+                            )
                         )
+                        Spacer(modifier = Modifier.width(9.dp))
                         Text(
-                            text = "<",
-                            style = poppinsBold.copy(fontSize = 36.sp),
-                            color = Color(0xFFED6825),
-                            modifier = Modifier
-                                .clickable { onBackClick() }
-                                .padding(end = 16.dp)
+                            "Local details",
+                            color = Color.White,
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold,
+                            style = poppinsBold,
                         )
                     }
-
                 },
                 colors = topAppBarColors(
                     containerColor = Color(0xFF212121)
