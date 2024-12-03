@@ -9,8 +9,8 @@ import androidx.room.PrimaryKey
 )
 data class Transaction(
     @PrimaryKey(autoGenerate = true) val id: Long,
-    @ColumnInfo(name = "user_id") val userId: Long, // Foreign key povezivanje sa User tabelom
+    @ColumnInfo(name = "user_id") val userId: Long,
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "bonus_points") val bonusPoints: Int,
-    @ColumnInfo(name = "transaction_date") val date: String // Možeš koristiti format datuma (npr. "dd-MM-yyyy")
+    @ColumnInfo(name = "transaction_date") val date: String
 )

@@ -68,7 +68,6 @@ fun LocationDetailsScreen(
             .background(Color(0xFF212121))
             .padding(16.dp)
     ) {
-        // Top Bar with Back Button
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -91,8 +90,6 @@ fun LocationDetailsScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Main Image
         Card(
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
@@ -108,8 +105,6 @@ fun LocationDetailsScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Title and Location
         Text(
             text = "Stari Grad - Car Wash",
             style = poppinsBold.copy(fontSize = 24.sp),
@@ -135,8 +130,6 @@ fun LocationDetailsScreen(
         }
 
         Spacer(modifier = Modifier.height(24.dp))
-
-        // Token Price Card
         Card(
             colors = CardDefaults.cardColors(containerColor = Color(0xFF333333)),
             shape = RoundedCornerShape(16.dp),
@@ -159,10 +152,8 @@ fun LocationDetailsScreen(
         }
 
         Spacer(modifier = Modifier.height(24.dp))
-
-        // Live Camera Button
         Button(
-            onClick = { /* Handle live camera click */ },
+            onClick = { },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF333333)),
             shape = RoundedCornerShape(32.dp),
             modifier = Modifier
@@ -210,7 +201,7 @@ private fun PriceRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically // Align all elements vertically centered
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = timeRange,
@@ -218,26 +209,22 @@ private fun PriceRow(
             color = Color.White
         )
 
-        // Add a spacer to separate time and price
         Spacer(modifier = Modifier.width(8.dp))
 
         Box(
             modifier = Modifier
                 .weight(1f)
                 .height(1.dp)
-                .align(Alignment.CenterVertically) // Align the line with the center of the row
-        ) {
+                .align(Alignment.CenterVertically)   ) {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 drawLine(
                     color = Color(0xFFED6825),
-                    start = Offset(0f, size.height / 2), // Ensure the line is vertically centered
-                    end = Offset(size.width, size.height / 2), // Ensure the line is horizontally drawn
+                    start = Offset(0f, size.height / 2),
+                    end = Offset(size.width, size.height / 2),
                     pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
                 )
             }
         }
-
-        // Add a spacer between the line and the price
         Spacer(modifier = Modifier.width(8.dp))
 
         Text(

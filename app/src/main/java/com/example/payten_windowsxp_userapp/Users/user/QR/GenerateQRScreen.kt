@@ -67,15 +67,14 @@ fun GenerateQRScreen(
             .fillMaxSize()
             .background(Color(0xFF212121))
     ) {
-        // Ikona za povratak ("X") u gornjem levom uglu
         Box(
             modifier = Modifier
-                .align(Alignment.TopStart) // Poravnanje u gornji levi ugao
-                .padding(16.dp) // Margina od ivice ekrana
-                .clickable { onBackClick() } // Povratak na prethodni ekran
+                .align(Alignment.TopStart)
+                .padding(16.dp)
+                .clickable { onBackClick() }
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_close), // Ikona "X"
+                painter = painterResource(id = R.drawable.ic_close),
                 contentDescription = "Close",
                 tint = Color(0xFFED6825),
                 modifier = Modifier.size(24.dp)

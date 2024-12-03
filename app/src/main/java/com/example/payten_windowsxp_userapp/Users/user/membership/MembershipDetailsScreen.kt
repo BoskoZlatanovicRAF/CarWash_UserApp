@@ -63,7 +63,6 @@ fun MembershipDetailsScreen(
             .background(Color(0xFF212121))
             .padding(16.dp)
     ) {
-        // Top Bar with Back Button and Title
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -87,7 +86,6 @@ fun MembershipDetailsScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Current Tier Card
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = Color(0xFFED6825)),
@@ -119,7 +117,6 @@ fun MembershipDetailsScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Progress to Platinum Card
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = Color(0xFF333333)),
@@ -138,7 +135,7 @@ fun MembershipDetailsScreen(
                     progress = 0.65f,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(30.dp) // Increased height for wider appearance
+                        .height(30.dp)
                         .padding(vertical = 8.dp),
                     color = Color(0xFFED6825),
                     trackColor = Color.Gray,
@@ -156,7 +153,7 @@ fun MembershipDetailsScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Your Benefits Section
+
         Text(
             text = "Your Benefits",
             style = poppinsBold.copy(fontSize = 20.sp),
@@ -165,13 +162,12 @@ fun MembershipDetailsScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Benefits Cards
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             BenefitCard(
-                modifier = Modifier.weight(1f),  // This will make each card take equal width
+                modifier = Modifier.weight(1f),
                 icon = R.drawable.car_tag,
                 title = "10% off",
                 subtitle = "All services"
@@ -188,7 +184,6 @@ fun MembershipDetailsScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Points History Section
         Text(
             text = "Points History",
             style = poppinsBold.copy(fontSize = 20.sp),
@@ -197,7 +192,6 @@ fun MembershipDetailsScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Points History Items
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -220,7 +214,7 @@ private fun BenefitCard(
     subtitle: String
 ) {
     Card(
-        modifier = modifier,  // Use the passed modifier which includes weight
+        modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = Color(0xFF333333)),
         shape = RoundedCornerShape(12.dp)
     ) {

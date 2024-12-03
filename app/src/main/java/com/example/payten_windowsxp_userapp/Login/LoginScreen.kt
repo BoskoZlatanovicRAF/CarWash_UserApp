@@ -110,7 +110,7 @@ onUserClick: (String) -> Unit
                 Text(
                     text = "Sign in to your\nAccount",
                     fontSize = 36.sp,
-                    style = poppinsBold, // Prilagođeni font
+                    style = poppinsBold,
                     color = Color.White,
                     textAlign = TextAlign.Center
                 )
@@ -119,7 +119,7 @@ onUserClick: (String) -> Unit
                     Text(
                         text = "Don’t have an account?",
                         fontSize = 16.sp,
-                        style = poppinsRegular, // Prilagođeni font
+                        style = poppinsRegular,
                         color = Color.White,
                         modifier = Modifier.clickable {
                         }
@@ -127,7 +127,7 @@ onUserClick: (String) -> Unit
                     Text(
                         text = " Sign Up",
                         fontSize = 16.sp,
-                        style = poppinsBold, // Prilagođeni font
+                        style = poppinsBold,
                         color = Color(0xFFED6825),
                         modifier = Modifier.clickable {
                             onUserClick("registerScreen")
@@ -150,7 +150,7 @@ onUserClick: (String) -> Unit
                 Text(
                     text = "Forgot Your Password?",
                     fontSize = 18.sp,
-                    style = poppinsRegular, // Prilagođeni font
+                    style = poppinsRegular,
                     color = Color.White,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier
@@ -177,7 +177,7 @@ onUserClick: (String) -> Unit
                     Text(
                         "Log In",
                         fontSize = 22.sp,
-                        style = poppinsBold, // Prilagođeni font
+                        style = poppinsBold,
                         modifier = Modifier.padding(6.dp)
                     )
                 }
@@ -204,26 +204,26 @@ isPassword: Boolean = false
             label = {
                 Text(
                     label,
-                    style = poppinsRegular.copy(color = Color.Gray) // Prilagođeni font
+                    style = poppinsRegular.copy(color = Color.Gray)
                 )
             },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 containerColor = Color.White,
-                focusedBorderColor = Color(0xFFED6825), // Orange
+                focusedBorderColor = Color(0xFFED6825),
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.Black
             ),
-            textStyle = poppinsRegular.copy(fontSize = 16.sp), // Prilagođeni font za unos
-            visualTransformation = if (isPassword) CustomPasswordVisualTransformation() else VisualTransformation.None // Dodaj transformaciju
+            textStyle = poppinsRegular.copy(fontSize = 16.sp),
+            visualTransformation = if (isPassword) CustomPasswordVisualTransformation() else VisualTransformation.None
         )
     }
 }
 
 class CustomPasswordVisualTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
-        val mask = "●" // Simbol koji će se prikazivati
+        val mask = "●"
         val maskedText = AnnotatedString(mask.repeat(text.length))
         return TransformedText(maskedText, OffsetMapping.Identity)
     }

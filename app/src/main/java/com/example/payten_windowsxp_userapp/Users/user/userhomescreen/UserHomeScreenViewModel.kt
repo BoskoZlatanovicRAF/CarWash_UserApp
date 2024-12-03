@@ -35,10 +35,10 @@ class UserHomeScreenViewModel @Inject constructor(
     private val carWashLocations = listOf(
         CarWashLocation(44.837411, 20.402724, "Novi Beograd"),
         CarWashLocation(44.82414368294484, 20.39677149927324, "Stara Pazova "),
-        CarWashLocation(44.800371, 20.456867, "Stari Grad"), // vidljiva perionica
+        CarWashLocation(44.800371, 20.456867, "Stari Grad"),
         CarWashLocation(44.792307, 20.491119, "Vracar Wash"),
         CarWashLocation(44.774992, 20.476667, "Vozdovac Wash"),
-        CarWashLocation(44.778358, 20.415154, "Banovo Brdo Wash")// vidljiva perionica
+        CarWashLocation(44.778358, 20.415154, "Banovo Brdo Wash")
     )
 
 
@@ -57,7 +57,6 @@ class UserHomeScreenViewModel @Inject constructor(
                         updateNearestCarWash(event.latitude, event.longitude)
                     }
                     is UserHomeScreenEvent.NavigateToCarWash -> {
-                        // Kreiramo URI za navigaciju sa trenutnom lokacijom i destinacijom
                         val currentLocation = state.value.nearestCarWash?.let { carWash ->
                             "locationScreen/${event.carWash.latitude}/${event.carWash.longitude}"
                         } ?: "locationScreen"

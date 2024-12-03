@@ -95,7 +95,7 @@ fun NotificationScreen(
                         painter = painterResource(id = R.drawable.baseline_notifications_none_24),
                         contentDescription = null,
                         tint = Color(0xFFED6825),
-                        modifier = Modifier.size(48.dp) // Ikonica će biti 48x48 dp
+                        modifier = Modifier.size(48.dp)
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

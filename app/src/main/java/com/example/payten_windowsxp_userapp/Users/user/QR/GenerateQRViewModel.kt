@@ -53,8 +53,8 @@ class GenerateQRViewModel @Inject constructor(
             if(authData.firstname.isNotEmpty()){
                 val qrCode = generateQrCode(
                     userId = authData.id,
-                    membership = "Gold", // ili dobijeno iz podataka
-                    discount = 0.1, // ili dobijeno iz podataka,
+                    membership = "Gold",
+                    discount = 0.1,
                     firstName = authData.firstname,
                     time = authData.time
                 )
@@ -84,8 +84,8 @@ class GenerateQRViewModel @Inject constructor(
     }
 
     fun getQrCodeBitmap(qrContent: String): Bitmap {
-        val size = 512 // pixels
-        val hints = hashMapOf<EncodeHintType, Int>().also { it[EncodeHintType.MARGIN] = 1 } // QR margine
+        val size = 512
+        val hints = hashMapOf<EncodeHintType, Int>().also { it[EncodeHintType.MARGIN] = 1 }
         val bits = QRCodeWriter().encode(qrContent, BarcodeFormat.QR_CODE, size, size, hints)
         return Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565).also {
             for (x in 0 until size) {
@@ -99,10 +99,9 @@ class GenerateQRViewModel @Inject constructor(
     private fun startTimer() {
         viewModelScope.launch {
             for (seconds in state.value.timeRemaining downTo 0) {
-                delay(1000L) // Čekaj 1 sekundu
+                delay(1000L)
                 setState { copy(timeRemaining = seconds) }
             }
-            // Kada vreme istekne, označi QR kod kao nevažeći
             setState { copy(qrExpired = true) }
         }
     }
@@ -125,7 +124,7 @@ class GenerateQRViewModel @Inject constructor(
                         qrBitmap = qrCode
                     )
                 }
-                startTimer() // Pokreni novi tajmer
+                startTimer()
             } else {
                 setState { copy(loading = false) }
             }

@@ -197,14 +197,14 @@ fun LocalScreen(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(vertical = 8.dp),
-                                        horizontalArrangement = Arrangement.Center // Centriranje sadržaja u Row
+                                        horizontalArrangement = Arrangement.Center
                                     ) {
                                         Text(
                                             text = "${token.timeStart} - ${token.timeEnd}",
                                             fontSize = 18.sp,
                                             color = Color.White
                                         )
-                                        Spacer(modifier = Modifier.width(8.dp)) // Razmak između tekstova
+                                        Spacer(modifier = Modifier.width(8.dp))
                                         Text(
                                             text = "  .................  ${token.price} €",
                                             fontSize = 18.sp,

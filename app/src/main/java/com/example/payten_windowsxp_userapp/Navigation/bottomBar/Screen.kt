@@ -35,7 +35,7 @@ sealed interface Screen {
     object Notifications : VectorScreen("notificationScreen", Icons.Outlined.Notifications, Icons.Rounded.Notifications)
     object Profile : VectorScreen("userProfile", Icons.Outlined.Person, Icons.Rounded.Person)
 
-    // Admin Screens
+
     object AdminHome : VectorScreen("adminHomeScreen", Icons.Outlined.Home, Icons.Rounded.Home)
     object AdminProfile : VectorScreen("userProfile", Icons.Outlined.Person, Icons.Rounded.Person)
 }

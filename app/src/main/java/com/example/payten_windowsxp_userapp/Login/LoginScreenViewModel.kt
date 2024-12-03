@@ -38,7 +38,6 @@ class LoginScreenViewModel @Inject constructor(
     init {
         addUsers()
         addTransactions()
-        //addTransactions()
         observeEvents()
     }
 

@@ -72,7 +72,7 @@ fun UserProfileScreen(
         navLogOutClick()
     }else {
         Scaffold(
-            containerColor = Color(0xFF212121) // Tamno siva pozadina
+            containerColor = Color(0xFF212121)
         ) { innerPadding ->
             Column(
                 modifier = Modifier
@@ -81,7 +81,6 @@ fun UserProfileScreen(
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                // Gornji deo za naslov i povratak
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -108,10 +107,6 @@ fun UserProfileScreen(
                     }
 
                 }
-
-                //Spacer(modifier = Modifier.height(4.dp))
-
-                // Ikonica profila
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -125,19 +120,16 @@ fun UserProfileScreen(
                     )
                 }
 
-
-                // Informacije o korisniku
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            Color(0xFF333333), // Siva pozadina
+                            Color(0xFF333333),
                             shape = MaterialTheme.shapes.medium
                         )
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    // Ikonica za uređivanje
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -146,7 +138,7 @@ fun UserProfileScreen(
                         ProfileField(
                             label = "Full Name",
                             value = "${state.firstName} ${state.lastName}",
-                            modifier = Modifier.weight(1f) // Ovo omogućava da tekst zauzme što više prostora
+                            modifier = Modifier.weight(1f)
                         )
                         Icon(
                             painter = painterResource(id = R.drawable.baseline_edit_24),
@@ -185,7 +177,7 @@ fun UserProfileScreen(
                     Text(
                         "Log Out",
                         fontSize = 22.sp,
-                        style = poppinsBold, // Prilagođeni font
+                        style = poppinsBold,
                         modifier = Modifier.padding(6.dp)
                     )
                 }
@@ -198,11 +190,11 @@ fun UserProfileScreen(
 fun ProfileField(
     label: String,
     value: String,
-    modifier: Modifier = Modifier // Dodaj opcionalni modifier
+    modifier: Modifier = Modifier
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = modifier // Prosledi modifier
+        modifier = modifier
     ) {
         Text(
             text = label,

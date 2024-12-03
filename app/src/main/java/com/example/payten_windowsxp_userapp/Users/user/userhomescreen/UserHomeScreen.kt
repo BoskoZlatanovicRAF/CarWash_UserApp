@@ -67,7 +67,7 @@ import com.google.android.gms.location.Priority
 fun NavGraphBuilder.userHomeScreen(
     route: String,
     onBonusClick: () -> Unit,
-    onCarWashClick: (CarWashLocation) -> Unit  // Dodajemo novi callback
+    onCarWashClick: (CarWashLocation) -> Unit
 ) = composable(
     route = route,
 ) { navBackStackEntry ->
@@ -79,7 +79,7 @@ fun NavGraphBuilder.userHomeScreen(
             userHomeScreenViewModel.setEvent(it)
         },
         onBonusClick = onBonusClick,
-        onCarWashClick = onCarWashClick  // Prosleđujemo callback
+        onCarWashClick = onCarWashClick
     )
 }
 
@@ -96,7 +96,6 @@ fun UserHomeScreen(
     var hasLocationPermission by remember { mutableStateOf(false) }
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
 
-    // Request location permissions
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -111,8 +110,6 @@ fun UserHomeScreen(
             )
         )
     }
-
-    // Get the current location and send updates to ViewModel
     DisposableEffect(hasLocationPermission) {
         if (hasLocationPermission) {
             try {
@@ -143,19 +140,16 @@ fun UserHomeScreen(
                 Log.e("UserHomeScreen", "Error getting location updates: ${e.message}")
             }
         } else {
-            // Handle the case when permissions are not granted
-            // Optionally, you can inform the user that location permissions are required
         }
 
-        // Return a DisposableEffectResult
-        onDispose { /* No additional cleanup */ }
+        onDispose { }
     }
 
     if (state.loading) {
         CircularProgressIndicator(modifier = Modifier.fillMaxSize())
     } else {
         Scaffold(
-            containerColor = Color(0xFF212121) // Background color of the Scaffold
+            containerColor = Color(0xFF212121)
         ) { innerPadding ->
             Column(
                 modifier = Modifier
@@ -185,7 +179,6 @@ fun UserHomeScreen(
                         color = Color.White
                     )
                 }
-                // BONUS POINTS
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -229,7 +222,6 @@ fun UserHomeScreen(
                     )
                 }
 
-               //  NAJBLIZA PERIONICA
                  Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -308,8 +300,6 @@ fun UserHomeScreen(
 
                 Spacer(modifier = Modifier.weight(0.5f))
 
-
-                // Advertisement Card
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -320,7 +310,7 @@ fun UserHomeScreen(
                     shape = RoundedCornerShape(16.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.advertisement),
+                        painter = painterResource(id = R.drawable.discount),
                         contentDescription = "Advertisement",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
@@ -334,6 +324,4 @@ fun UserHomeScreen(
         }
     }
 }
-
-// Extension function for formatting numbers
 fun Float.format(digits: Int) = "%.${digits}f".format(this)
