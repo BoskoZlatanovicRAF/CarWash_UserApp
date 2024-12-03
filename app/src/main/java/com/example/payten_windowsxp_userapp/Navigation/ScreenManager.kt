@@ -30,7 +30,6 @@ import java.net.URLEncoder
 @Composable
 fun ScreenManager() {
     val navController = rememberNavController()
-//    val selectedCarWash = remember { mutableStateOf<CarWashLocation?>(null) }
 
     Scaffold (
         bottomBar = {
@@ -61,8 +60,8 @@ fun ScreenManager() {
             userHomeScreen(
                 route = "userHomeScreen",
                 onBonusClick = {
-                    navController.navigate(route = "userHomeScreen/membershipDetailsScreen")//dodaj rutu za points screen
-                },
+                    navController.navigate(route = "userHomeScreen/membershipDetailsScreen")
+                               },
                 onCarWashClick = { carWash ->
                     val encodedName = URLEncoder.encode(carWash.name, "UTF-8")
                     navController.navigate(route = "locationScreen/${carWash.latitude}/${carWash.longitude}/${encodedName}")

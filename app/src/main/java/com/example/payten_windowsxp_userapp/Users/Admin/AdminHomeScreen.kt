@@ -98,7 +98,7 @@ fun AdminHomeScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-                    .background(Color(0xFF212121)) // Background color
+                    .background(Color(0xFF212121))
             ) {
                 if (!state.fetching) {
                     LazyColumn(
@@ -133,7 +133,7 @@ fun LocalCard(
             .clickable { onItemClick(local.id) },
         shape = RoundedCornerShape(16.dp),
         colors = androidx.compose.material3.CardDefaults.cardColors(
-            containerColor = Color(0xFF333333) // Grey card background
+            containerColor = Color(0xFF333333)
         )
     ) {
         Row(
@@ -161,12 +161,12 @@ fun LocalCard(
                     Text(
                         text = "● ",
                         fontSize = 16.sp,
-                        color = Color(0xFF00FF00) // Green text
+                        color = Color(0xFF00FF00)
                     )
                     Text(
                         text = "Live camera",
                         fontSize = 14.sp,
-                        color = Color.LightGray // Green text
+                        color = Color.LightGray
                     )
                 }
             }
@@ -186,7 +186,7 @@ fun Loading() {
         ) {
             Text(text = "Loading...", fontSize = 24.sp, color = Color.White)
             Spacer(modifier = Modifier.height(16.dp))
-            CircularProgressIndicator(color = Color(0xFFED6825)) // Orange indicator
+            CircularProgressIndicator(color = Color(0xFFED6825))
         }
     }
 }

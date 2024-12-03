@@ -33,7 +33,6 @@ class AuthStore @Inject constructor(
 
         Log.d("AuthStore", "Data updated: $newAuthData")
     }
-    //clear
     suspend fun clearAuthData() {
         persistence.updateData { oldAuthData ->
             AuthData(

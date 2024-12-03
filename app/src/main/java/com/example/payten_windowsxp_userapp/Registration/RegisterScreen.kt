@@ -94,7 +94,7 @@ fun RegisterScreen(
         modifier = Modifier
             .fillMaxSize()
             .clickable { focusManager.clearFocus() },
-        containerColor = Color(0xFF212121), // Postavljanje pozadine na tamno sivu
+        containerColor = Color(0xFF212121),
         content = { paddingValues ->
             if (!data.fatching) {
                 var fullName by remember { mutableStateOf("") }
@@ -120,7 +120,7 @@ fun RegisterScreen(
                     Text(
                         text = "Create account",
                         fontSize = 36.sp,
-                        style = poppinsBold, // Prilagođeni font
+                        style = poppinsBold,
                         color = Color.White,
                         modifier = Modifier.padding(bottom = 8.dp),
                     )
@@ -128,14 +128,14 @@ fun RegisterScreen(
                         Text(
                             text = "Already have an account?",
                             fontSize = 16.sp,
-                            style = poppinsRegular, // Prilagođeni font
+                            style = poppinsRegular,
                             color = Color(0xFFFFFFFF),
                             modifier = Modifier.padding(bottom = 8.dp),
                         )
                         Text(
                             text = " Login",
                             fontSize = 16.sp,
-                            style = poppinsBold, // Prilagođeni font
+                            style = poppinsBold,
                             color = Color(0xFFED6825),
                             modifier = Modifier
                                 .padding(bottom = 8.dp)
@@ -145,7 +145,7 @@ fun RegisterScreen(
                         )
                     }
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(0.dp), // Nema razmaka između input polja
+                        verticalArrangement = Arrangement.spacedBy(0.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         registrationInput(
@@ -184,13 +184,13 @@ fun RegisterScreen(
                         modifier = Modifier
                             .fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFED6825) // Narandžasta boja za dugme
+                            containerColor = Color(0xFFED6825)
                         )
                     ) {
                         Text(
                             text = "Register",
                             fontSize = 20.sp,
-                            style = poppinsBold, // Prilagođeni font
+                            style = poppinsBold,
                             color = Color.White,
                             modifier = Modifier.padding(6.dp)
                         )
@@ -219,19 +219,19 @@ fun registrationInput(
             label = {
                 Text(
                     text = label,
-                    style = poppinsRegular.copy(color = Color.Gray) // Prilagođeni font
+                    style = poppinsRegular.copy(color = Color.Gray)
                 )
             },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 containerColor = Color.White,
-                focusedBorderColor = Color(0xFFED6825), // Orange
+                focusedBorderColor = Color(0xFFED6825),
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
             textStyle = poppinsRegular.copy(fontSize = 16.sp),
-            visualTransformation = if (isPassword) CustomPasswordVisualTransformation() else VisualTransformation.None // Dodaj transformaciju// Prilagođeni font za unos
+            visualTransformation = if (isPassword) CustomPasswordVisualTransformation() else VisualTransformation.None
         )
     }
 }
@@ -266,7 +266,7 @@ fun DatePickerDocked(
             },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 containerColor = Color.White,
-                focusedBorderColor = Color(0xFFED6825), // Orange
+                focusedBorderColor = Color(0xFFED6825),
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
@@ -297,7 +297,7 @@ fun DatePickerDocked(
         }
         if (datePickerState.selectedDateMillis != null) {
             val formattedDate = convertMillisToDate(datePickerState.selectedDateMillis!!)
-            onDateSelected(formattedDate) // Ažurira roditeljsku komponentu sa izabranim datumom
+            onDateSelected(formattedDate)
         }
     }
 }
@@ -320,11 +320,11 @@ fun LoadingEditProfile() {
             Text(
                 text = "Loading...",
                 fontSize = 24.sp,
-                style = poppinsBold, // Prilagođeni font
+                style = poppinsBold,
                 color = Color.White
             )
             Spacer(modifier = Modifier.height(16.dp))
-            CircularProgressIndicator(color = Color(0xFFED6825)) // Narandžasta boja za indikator
+            CircularProgressIndicator(color = Color(0xFFED6825))
         }
     }
 }

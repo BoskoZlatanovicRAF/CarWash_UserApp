@@ -55,12 +55,11 @@ fun NavGraphBuilder.locationScreen(
     route: String,
     onPictureClick: () -> Unit
 ) {
-    // Ruta za bottom navigation
+
     composable(route = route) {
         LocationScreen(selectedCarWash = null, onPictureClick = onPictureClick)
     }
 
-    // Ruta za navigaciju iz UserHomeScreen sa parametrima
     composable(
         route = "$route/{lat}/{lon}/{name}",
         arguments = listOf(
@@ -89,13 +88,13 @@ fun LocationScreen(
     locations: List<CarWashLocation> = listOf(
         CarWashLocation(44.837411, 20.402724, "Novi Beograd"),
         CarWashLocation(44.82414368294484, 20.39677149927324, "Stara Pazova "),
-        CarWashLocation(44.800371, 20.456867, "Stari Grad"), // vidljiva perionica
+        CarWashLocation(44.800371, 20.456867, "Stari Grad"),
         CarWashLocation(44.792307, 20.491119, "Vracar Wash"),
         CarWashLocation(44.774992, 20.476667, "Vozdovac Wash"),
         CarWashLocation(44.778358, 20.415154, "Banovo Brdo Wash")
     )
 ) {
-    val hiddenPoint = Point(44.806530, 20.464254) // nevidljiva perionica
+    val hiddenPoint = Point(44.806530, 20.464254)
 
 
     var mapView by remember { mutableStateOf<MapView?>(null) }
@@ -103,11 +102,9 @@ fun LocationScreen(
     var hasLocationPermission by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    // Declare MapObjectCollections
     val markerCollection = remember { mutableStateOf<MapObjectCollection?>(null) }
     val polylineCollection = remember { mutableStateOf<MapObjectCollection?>(null) }
 
-    // Function to start location updates
     fun startLocationUpdates(locationManager: LocationManager) {
         try {
             if (ActivityCompat.checkSelfPermission(
@@ -116,12 +113,10 @@ fun LocationScreen(
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
 
-                // Try to get the last known GPS location
                 locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)?.let {
                     currentLocation = it
                 }
 
-                // Register for GPS updates
                 locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
                     5000L,
@@ -130,7 +125,6 @@ fun LocationScreen(
                     currentLocation = location
                 }
 
-                // If GPS is not available, use network provider
                 if (currentLocation == null) {
                     locationManager.requestLocationUpdates(
                         LocationManager.NETWORK_PROVIDER,
@@ -148,7 +142,6 @@ fun LocationScreen(
         }
     }
 
-    // Request location permissions
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -160,7 +153,6 @@ fun LocationScreen(
         }
     }
 
-    // Check for location permissions
     LaunchedEffect(Unit) {
         launcher.launch(
             arrayOf(
@@ -171,7 +163,6 @@ fun LocationScreen(
         MapKitFactory.getInstance().onStart()
     }
 
-    // Move camera to current location
     LaunchedEffect(currentLocation) {
         currentLocation?.let { location ->
             mapView?.map?.move(
@@ -187,20 +178,16 @@ fun LocationScreen(
         }
     }
 
-    // Iscrtaj rutu od trenutne lokacije do selektovane perionice
     LaunchedEffect(currentLocation, selectedCarWash) {
         if (currentLocation != null && selectedCarWash != null) {
             mapView?.map?.let { map ->
                 polylineCollection.value?.apply {
-                    // Brisanje postojece rute
                     clear()
 
                     val routeBetweenLiveLocation_Hidden = listOf(
                         Point(currentLocation!!.latitude, currentLocation!!.longitude),
                         hiddenPoint
                     )
-
-                    // Draw route with your theme color
                     addPolyline(Polyline(routeBetweenLiveLocation_Hidden)).apply {
                         setStrokeColor(android.graphics.Color.argb(255, 0, 0, 255))
                         strokeWidth = 2f
@@ -215,8 +202,6 @@ fun LocationScreen(
                         setStrokeColor(android.graphics.Color.argb(255, 0,0, 255))
                         strokeWidth = 2f
                     }
-
-                    // Adjust camera to show both points
                     val boundingBox = BoundingBoxHelper.fromPoints(routeBetweenHidden_Selected)
                     map.move(
                         CameraPosition(boundingBox.northEast, 12.0f, 0.0f, 0.0f),
@@ -264,14 +249,11 @@ fun LocationScreen(
             modifier = Modifier.fillMaxSize()
         )
 
-        // Update current location marker
         currentLocation?.let { location ->
             LaunchedEffect(location) {
                 markerCollection.value?.apply {
-                    // Clear existing markers
                     clear()
 
-                    // Add car wash markers
                     locations.forEach { carWash ->
                         addPlacemark(
                             Point(carWash.latitude, carWash.longitude)
@@ -280,7 +262,6 @@ fun LocationScreen(
                         }
                     }
 
-                    // Add current location marker
                     addPlacemark(
                         Point(location.latitude, location.longitude)
                     ).apply {
@@ -290,7 +271,6 @@ fun LocationScreen(
             }
         }
 
-        // Zoom controls
         Box(
             modifier = Modifier
                 .align(Alignment.TopEnd)
@@ -370,19 +350,15 @@ fun LocationScreen(
                     currentLocation = currentLocation,
                     carWashes = locations,
                     onShowRouteClick = { carWash ->
-                        // Logic to show route )
                         if (currentLocation != null) {
                             mapView?.map?.let { map ->
                                 polylineCollection.value?.apply {
-                                    // Brisanje postojece rute
                                     clear()
 
                                     val routeBetweenLiveLocation_Hidden = listOf(
                                         Point(currentLocation!!.latitude, currentLocation!!.longitude),
                                         hiddenPoint
                                     )
-
-                                    // Draw route with your theme color
                                     addPolyline(Polyline(routeBetweenLiveLocation_Hidden)).apply {
                                         setStrokeColor(android.graphics.Color.argb(255, 0, 0, 255))
                                         strokeWidth = 2f
@@ -397,8 +373,6 @@ fun LocationScreen(
                                         setStrokeColor(android.graphics.Color.argb(255, 0,0, 255))
                                         strokeWidth = 2f
                                     }
-
-                                    // Adjust camera to show both points
                                     val boundingBox = BoundingBoxHelper.fromPoints(routeBetweenHidden_Selected)
                                     map.move(
                                         CameraPosition(boundingBox.northEast, 12.0f, 0.0f, 0.0f),
@@ -479,7 +453,6 @@ fun CarWashCard(
                 .fillMaxSize()
                 .clickable { onPictureClick() }
         ) {
-            // Background Image
             Image(
                 painter = painterResource(id = imageResId),
                 contentDescription = null,
@@ -488,42 +461,33 @@ fun CarWashCard(
                     .height(150.dp),
                 contentScale = ContentScale.Crop
             )
-
-            // Semi-transparent black overlay
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = 0.5f))
             )
-
-            // Content
             Column(
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(12.dp)
             ) {
-                // Car Wash Name
                 Text(
                     text = carWash.name,
                     style = poppinsBold.copy(fontSize = 14.sp),
                     color = Color.White,
                 )
-
-                // Distance
                 currentLocation?.let {
                     val distance = calculateDistance(
                         it.latitude, it.longitude,
                         carWash.latitude, carWash.longitude
                     )
                     Text(
-                        text = "${(distance / 1000).format(1)} km", // Convert meters to kilometers
+                        text = "${(distance / 1000).format(1)} km",
                         style = poppinsBold.copy(fontSize = 12.sp),
                         color = Color.LightGray
                     )
                 }
             }
-
-            // Show Route Button
             Button(
                 onClick = onShowRouteClick,
                 colors = ButtonDefaults.buttonColors(
@@ -539,8 +503,6 @@ fun CarWashCard(
                     color = Color.White
                 )
             }
-
-            // Rating
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -567,7 +529,7 @@ fun CarWashCard(
 fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Float {
     val results = FloatArray(1)
     Location.distanceBetween(lat1, lon1, lat2, lon2, results)
-    return results[0] // Return distance in meters
+    return results[0]
 }
 
 fun findTwoNearestCarWashes(
@@ -579,8 +541,6 @@ fun findTwoNearestCarWashes(
         calculateDistance(currentLat, currentLon, it.latitude, it.longitude)
     }.take(2)
 }
-
-// Helper object to calculate bounding box from a list of points
 object BoundingBoxHelper {
     fun fromPoints(points: List<Point>): BoundingBox {
         var minLat = points.first().latitude

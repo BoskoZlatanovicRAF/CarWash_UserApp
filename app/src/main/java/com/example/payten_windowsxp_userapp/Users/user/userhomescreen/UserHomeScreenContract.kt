@@ -11,7 +11,7 @@ interface UserHomeScreenContract {
         val bonusPoints: Long = 0,
         val transactions: List<Transaction> = emptyList(),
         val nearestCarWash: CarWashLocation? = null,
-        val distanceToNearestCarWash: Float = 0f // u metrima
+        val distanceToNearestCarWash: Float = 0f
     )
 
 
