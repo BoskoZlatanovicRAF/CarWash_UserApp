@@ -83,7 +83,7 @@ class GenerateQRViewModel @Inject constructor(
         }
     }
 
-    fun getQrCodeBitmap(qrContent: String): Bitmap {
+    private fun getQrCodeBitmap(qrContent: String): Bitmap {
         val size = 512
         val hints = hashMapOf<EncodeHintType, Int>().also { it[EncodeHintType.MARGIN] = 1 }
         val bits = QRCodeWriter().encode(qrContent, BarcodeFormat.QR_CODE, size, size, hints)

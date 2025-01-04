@@ -3,23 +3,23 @@ package com.example.payten_windowsxp_userapp.Navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.payten_windowsxp_userapp.Login.logIn
 import com.example.payten_windowsxp_userapp.Navigation.bottomBar.BottomNavigationBar
+import com.example.payten_windowsxp_userapp.Navigation.viewModel.ScreenViewModel
 import com.example.payten_windowsxp_userapp.Registration.registerScreen
 import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.EditLocalScreen.editLocalScreen
 import com.example.payten_windowsxp_userapp.Users.Admin.LocalScreen.localScreen
 import com.example.payten_windowsxp_userapp.Users.Admin.adminHomeScreen
 import com.example.payten_windowsxp_userapp.Users.user.Notifications.notificationScreen
 import com.example.payten_windowsxp_userapp.Users.user.QR.generateQRScreen
-import com.example.payten_windowsxp_userapp.Users.user.locationScreen.CarWashLocation
 import com.example.payten_windowsxp_userapp.Users.user.locationScreen.locationScreen
 import com.example.payten_windowsxp_userapp.Users.user.locationScreen.locationScreenDetails.locationDetailsScreen
 import com.example.payten_windowsxp_userapp.Users.user.membership.membershipDetailsScreen
@@ -30,6 +30,10 @@ import java.net.URLEncoder
 @Composable
 fun ScreenManager() {
     val navController = rememberNavController()
+    val screenViewModel = hiltViewModel<ScreenViewModel>()
+    val startDestination by screenViewModel.startDestination.collectAsState()
+
+
 
     Scaffold (
         bottomBar = {
@@ -42,7 +46,7 @@ fun ScreenManager() {
     ){ paddingValue ->
         NavHost(
             navController = navController,
-            startDestination = "login",
+            startDestination = startDestination,
             modifier = Modifier.padding(paddingValue)
         ) {
             logIn(
